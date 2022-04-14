@@ -50,16 +50,16 @@ class Field {
 	constructor(partsX, partsY, {
 		x,
 		y
-	}, player) {
+	}, collider) {
 		this.partsX = partsX;
 		this.partsY = partsY;
 		this.x = x;
 		this.y = y;
-		this.unitWidth = 26;
+		this.unitWidth = Math.round(canvas.width / partsX);
 		this.unitHeight = 26;
 		this.units = [];
-		this.gap = 2
-		this.player = player
+		this.gap = 0
+		this.collider = collider
 
 		this.calculationOfPoint();
 	}
@@ -78,7 +78,7 @@ class Field {
 					ctx.fillStyle = 'hsl(48, 70%, 30%)'
 				}
 			} else {
-				if (sat(this.player, unit)) {
+				if (sat(this.collider, unit)) {
 					unit.startTimer()
 				}
 			}

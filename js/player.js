@@ -1,7 +1,7 @@
 class Player {
 	constructor({
-		x = 50,
-		y = 100,
+		x = 200,
+		y = 300,
 		width = 50,
 		height = 100,
 		maxSpeed = 5,
@@ -24,8 +24,6 @@ class Player {
 
 		this.calculatinOfPoint()
 
-		/* getting direction */
-		console.log(this.vertex)
 		this.edge = this.vertex[2].subtr(this.vertex[1]);
 		this.length = this.edge.mag();
 		this.dir = this.edge.unit();
@@ -78,16 +76,15 @@ class Player {
 		this.c = this.height * this.cos
 		this.d = this.height * this.sin
 
-
-		this.points = [{
-				x: (this.x + (this.halfWidth - this.a)) + this.speedTurnX,
-				y: (this.y + (this.height - this.b)) - this.speedTurnY
-			},
-			{
-				x: (this.x + (this.halfWidth + this.a)) + this.speedTurnX,
-				y: (this.y + (this.height + this.b)) - this.speedTurnY
-			}
-		]
+		this.points = []
+		this.points[0] = {
+			x: (this.x + (this.halfWidth - this.a)) + this.speedTurnX,
+			y: (this.y + (this.height - this.b)) - this.speedTurnY
+		}
+		this.points[1] = {
+			x: (this.x + (this.halfWidth + this.a)) + this.speedTurnX,
+			y: (this.y + (this.height + this.b)) - this.speedTurnY
+		}
 		this.points[2] = {
 			x: this.points[1].x + this.d,
 			y: this.points[1].y - this.c
@@ -108,28 +105,14 @@ class Player {
 		ctx.lineWidth = 2;
 		ctx.beginPath();
 
-		// left-top
 		ctx.moveTo(this.points[3].x, this.points[3].y);
-		// right-top
-		ctx.lineTo(this.points[2].x, this.points[2].y);
-		// right-bottom
-		ctx.lineTo(this.points[1].x, this.points[1].y);
-		// left bottom
-		ctx.lineTo(this.points[0].x, this.points[0].y);
 
-		ctx.lineTo(this.points[3].x, this.points[3].y);
-
-		this.a = (this.width) * this.cos
-		this.b = (this.width) * this.sin
-
-		this.c = (this.height + this.height) * this.cos
-		this.d = (this.height + this.height) * this.sin
-
+		this.points.forEach(point => {
+			ctx.lineTo(point.x, point.y);
+		})
 
 		ctx.stroke();
 		ctx.restore()
-
-
 
 		this.x += this.speedTurnX
 		this.y -= this.speedTurnY
