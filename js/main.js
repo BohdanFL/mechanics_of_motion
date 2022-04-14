@@ -6,7 +6,7 @@ const player = new Player({
 const machine1 = new Machines(185, 500, 80, 40)
 const machine2 = new Machines(350, 500, 30, 40)
 
-const field = new Field(1000, 1000, {
+const field = new Field(64, 24, {
 	x: 0,
 	y: 0
 }, [machine1, machine2]);
@@ -23,7 +23,7 @@ const update = () => {
 	machine2.draw()
 
 	ctx.restore()
-	// requestAnimationFrame(update)
+	requestAnimationFrame(update)
 }
 requestAnimationFrame(update)
 
