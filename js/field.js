@@ -56,7 +56,7 @@ class Field {
 		this.x = x;
 		this.y = y;
 		this.unitWidth = Math.round(canvas.width / partsX);
-		this.unitHeight = 26;
+		this.unitHeight = Math.round(canvas.height / 2.5 / partsY);
 		this.units = [];
 		this.gap = 0
 		this.colliders = colliders
