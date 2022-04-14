@@ -3,11 +3,13 @@ const player = new Player({
 	y: 300
 })
 
-const machine = new Machines(185, 500, 80, 40)
-const field = new Field(30, 8, {
+const machine1 = new Machines(185, 500, 80, 40)
+const machine2 = new Machines(350, 500, 30, 40)
+
+const field = new Field(50, 16, {
 	x: 0,
 	y: 0
-}, machine);
+}, [machine1, machine2]);
 
 
 
@@ -17,8 +19,8 @@ const update = () => {
 
 	field.draw()
 	player.draw()
-	machine.draw()
-	machine.connectToPlayer()
+	machine1.draw()
+	machine2.draw()
 
 	ctx.restore()
 	requestAnimationFrame(update)

@@ -50,7 +50,7 @@ class Field {
 	constructor(partsX, partsY, {
 		x,
 		y
-	}, collider) {
+	}, colliders) {
 		this.partsX = partsX;
 		this.partsY = partsY;
 		this.x = x;
@@ -59,7 +59,7 @@ class Field {
 		this.unitHeight = 26;
 		this.units = [];
 		this.gap = 0
-		this.collider = collider
+		this.colliders = colliders
 
 		this.calculationOfPoint();
 	}
@@ -78,9 +78,11 @@ class Field {
 					ctx.fillStyle = 'hsl(48, 70%, 30%)'
 				}
 			} else {
-				if (sat(this.collider, unit)) {
-					unit.startTimer()
-				}
+				this.colliders.forEach(collider => {
+					if (sat(collider, unit)) {
+						unit.startTimer()
+					}
+				})
 			}
 
 			unit.points.forEach(point => {

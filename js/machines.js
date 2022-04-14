@@ -45,6 +45,7 @@ class Machines {
 
 		this.x += this.speedTurnX
 		this.y -= this.speedTurnY
+		this.connectToPlayer()
 	}
 
 	calculationOfPoint() {
@@ -88,6 +89,8 @@ class Machines {
 
 	connectToPlayer() {
 		if (this.isConnected) {
+			this.x = player.x - (this.width - player.width) / 2
+			this.y = player.y + player.height
 			this.speed = player.speed
 			this.radian = player.radian
 			this.dir = player.dir
