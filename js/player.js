@@ -15,8 +15,8 @@ class Player {
 		this.height = height
 		this.color = color
 		this.speed = 0
-		this.velocity = 0.08
-		this.turnSpeed = 1.5
+		this.velocity = 0.12
+		this.turnSpeed = 2
 		this.angle = angle
 		this.radian = angle * (Math.PI / 180)
 		this.maxSpeed = maxSpeed

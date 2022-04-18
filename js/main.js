@@ -1,15 +1,17 @@
 const player = new Player({
-	x: 200,
-	y: 300
+	x: 250 + (80 / 2 - 25),
+	y: 350
 })
 
-const machine1 = new Machines(185, 500, 80, 40)
-const machine2 = new Machines(350, 500, 30, 40)
+const sowing = new SowingMachines(250, 500, 80, 40)
+const harvester = new Harvester(350, 500, 80, 40)
+const cultivator = new Cultivator(450, 500, 80, 40)
+const fertilizer = new Fertilizer(550, 500, 80, 40)
 
-const field = new Field(64, 24, {
+const field = new Field(64, 16, {
 	x: 0,
 	y: 0
-}, [machine1, machine2]);
+}, [sowing, cultivator, fertilizer, harvester]);
 
 
 
@@ -19,13 +21,20 @@ const update = () => {
 
 	field.draw()
 	player.draw()
-	machine1.draw()
-	machine2.draw()
+	sowing.draw()
+	cultivator.draw()
+	fertilizer.draw()
+	harvester.draw()
 
 	ctx.restore()
 	requestAnimationFrame(update)
+	// setTimeout(update, 1000 / 60)
 }
 requestAnimationFrame(update)
+setTimeout(() => {
+
+	alert("Green - sowing machine \n Blue - cultivator \n Red - harvester \n Yellow - fertilizer(not work)")
+}, 1000);
 
 addEventListener("resize", () => {
 	canvas.height = innerHeight

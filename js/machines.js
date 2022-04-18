@@ -1,15 +1,18 @@
 class Machines {
-	constructor(x, y, width, height) {
+	constructor(x, y, width, height, color = 'rgba(0, 0, 0, 0.5)') {
 		this.x = x
 		this.y = y
 		this.width = width
 		this.height = height
+		this.type = null
+		this.color = color
 
 		this.halfWidth = this.width / 2
 		this.angle = 0
 		this.speed = 0
 		this.radian = this.angle * (Math.PI / 180)
 		this.isConnected = false
+
 		this.points = []
 		this.vertex = []
 		this.calculationOfPoint()
@@ -31,9 +34,10 @@ class Machines {
 
 	draw() {
 		this.calculationOfPoint()
+
 		ctx.save()
 		ctx.beginPath()
-		ctx.strokeStyle = 'rgb(0, 0, 255)'
+		ctx.strokeStyle = this.color
 		ctx.moveTo(this.points[3].x, this.points[3].y);
 
 		this.points.forEach(point => {
@@ -45,10 +49,20 @@ class Machines {
 
 		this.x += this.speedTurnX
 		this.y -= this.speedTurnY
-		this.connectToPlayer()
+
+		if (this.isConnected) {
+			this.x = player.x - (this.width - player.width) / 2
+			this.y = player.y + player.height
+			this.speed = player.speed
+			this.radian = player.radian
+			this.dir = player.dir
+		} else {
+			this.speed = 0
+		}
 	}
 
 	calculationOfPoint() {
+
 		this.cos = Math.cos(this.radian)
 		this.sin = Math.sin(this.radian)
 
@@ -86,28 +100,32 @@ class Machines {
 		this.vertex[2] = new Vector(this.points[2].x, this.points[2].y);
 		this.vertex[3] = new Vector(this.points[3].x, this.points[3].y);
 	}
-
-	connectToPlayer() {
-		if (this.isConnected) {
-			this.x = player.x - (this.width - player.width) / 2
-			this.y = player.y + player.height
-			this.speed = player.speed
-			this.radian = player.radian
-			this.dir = player.dir
-		} else {
-			this.speed = 0
-		}
-	}
 }
 
 class SowingMachines extends Machines {
-	constructor() {
-		super()
+	constructor(x, y, width, height) {
+		super(x, y, width, height, 'rgba(0, 255, 0, 1)')
+		this.type = 'sowing'
 	}
 }
 
 class Cultivator extends Machines {
-	constructor() {
-		super()
+	constructor(x, y, width, height) {
+		super(x, y, width, height, 'rgba(0, 0, 255, 1)')
+		this.type = 'cultivator'
+	}
+}
+
+class Fertilizer extends Machines {
+	constructor(x, y, width, height) {
+		super(x, y, width, height, 'rgba(255, 255, 0, 1)')
+		this.type = 'fertilizer'
+	}
+}
+
+class Harvester extends Machines {
+	constructor(x, y, width, height) {
+		super(x, y, width, height, 'rgba(255, 0, 0, 1)')
+		this.type = 'harvester'
 	}
 }
