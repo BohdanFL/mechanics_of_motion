@@ -1,131 +1,97 @@
-class Machines {
-	constructor(x, y, width, height, color = 'rgba(0, 0, 0, 0.5)') {
-		this.x = x
-		this.y = y
-		this.width = width
-		this.height = height
+class Machine extends Box {
+	constructor(x, y, width, height, angle, transports, color) {
+		super(x, y, width, height, angle, color)
+
 		this.type = null
-		this.color = color
-
-		this.halfWidth = this.width / 2
-		this.angle = 0
-		this.speed = 0
-		this.radian = this.angle * (Math.PI / 180)
 		this.isConnected = false
-
-		this.points = []
-		this.vertex = []
-		this.calculationOfPoint()
-		this.edge = this.vertex[2].subtr(this.vertex[1]);
-		this.length = this.edge.mag();
-		this.dir = this.edge.unit();
-		this.refDir = this.edge.unit()
+		this.transports = transports || []
+		this.activeTransport
 
 		window.addEventListener("keydown", (e) => {
-			if (e.code === 'Space' && sat(player, this) && !this.isConnected) {
-				this.isConnected = true
-				this.x = player.x - (this.width - player.width) / 2
-				this.y = player.y + player.height
+			if (e.code === 'Space' && !this.isConnected) {
+				this.transports.forEach(transport => {
+					if (sat(transport, this)) {
+						this.activeTransport = transport
+						this.isConnected = true
+						this.x = transport.x - (this.width - transport.width) / 2
+						this.y = transport.y + transport.height
+					}
+				})
 			} else if (e.code === 'Space' && this.isConnected) {
 				this.isConnected = false
+				this.activeTransport = null
 			}
 		})
+
+	}
+
+	setVectors() {
+		this.vertex[0] = new Vector(
+			(this.x + (this.halfWidth - this.a)) + this.speedTurnX,
+			(this.y - this.b) - this.speedTurnY
+		)
+		this.vertex[1] = new Vector(
+			(this.x + (this.halfWidth + this.a)) + this.speedTurnX,
+			(this.y + this.b) - this.speedTurnY
+		)
+		this.vertex[2] = new Vector(
+			this.vertex[1].x - this.d,
+			this.vertex[1].y + this.c
+		)
+		this.vertex[3] = new Vector(
+			this.vertex[0].x - this.d,
+			this.vertex[0].y + this.c
+		)
 	}
 
 	draw() {
-		this.calculationOfPoint()
+		super.draw()
 
-		ctx.save()
-		ctx.beginPath()
-		ctx.strokeStyle = this.color
-		ctx.moveTo(this.points[3].x, this.points[3].y);
-
-		this.points.forEach(point => {
-			ctx.lineTo(point.x, point.y)
-		})
-
-		ctx.stroke()
-		ctx.restore()
-
-		this.x += this.speedTurnX
-		this.y -= this.speedTurnY
 
 		if (this.isConnected) {
-			this.x = player.x - (this.width - player.width) / 2
-			this.y = player.y + player.height
-			this.speed = player.speed
-			this.radian = player.radian
-			this.dir = player.dir
+			this.x = this.activeTransport.x - (this.width - this.activeTransport.width) / 2
+			this.y = this.activeTransport.y + this.activeTransport.height
+			this.speed = this.activeTransport.speed
+			this.radian = this.activeTransport.radian
+			this.dir = this.activeTransport.dir
 		} else {
 			this.speed = 0
 		}
+		this.x += this.speedTurnX
+		this.y -= this.speedTurnY
 	}
 
-	calculationOfPoint() {
-
-		this.cos = Math.cos(this.radian)
-		this.sin = Math.sin(this.radian)
-
-		this.speedTurnX = this.speed * this.sin
-		this.speedTurnY = this.speed * this.cos
-
-		this.a = (this.halfWidth) * this.cos
-		this.b = (this.halfWidth) * this.sin
-		this.c = this.height * this.cos
-		this.d = this.height * this.sin
-
-		this.points[0] = {
-			x: (this.x + (this.halfWidth - this.a)) + this.speedTurnX,
-			y: (this.y - this.b) - this.speedTurnY
-		}
-		this.points[1] = {
-			x: (this.x + (this.halfWidth + this.a)) + this.speedTurnX,
-			y: (this.y + this.b) - this.speedTurnY
-		}
-
-		this.points[2] = {
-			x: this.points[1].x - this.d,
-			y: this.points[1].y + this.c
-		}
-		this.points[3] = {
-			x: this.points[0].x - this.d,
-			y: this.points[0].y + this.c
-		}
-		this.setVector()
-	}
-
-	setVector() {
-		this.vertex[0] = new Vector(this.points[0].x, this.points[0].y);
-		this.vertex[1] = new Vector(this.points[1].x, this.points[1].y);
-		this.vertex[2] = new Vector(this.points[2].x, this.points[2].y);
-		this.vertex[3] = new Vector(this.points[3].x, this.points[3].y);
+	addTransport(transport) {
+		this.transports.push(transport)
 	}
 }
 
-class SowingMachines extends Machines {
-	constructor(x, y, width, height) {
-		super(x, y, width, height, 'rgba(0, 255, 0, 1)')
+
+
+class SowingMachine extends Machine {
+	constructor(x, y, width, height, angle, transports) {
+		super(x, y, width, height, angle, transports, 'rgba(0, 255, 0, 1)')
 		this.type = 'sowing'
 	}
 }
 
-class Cultivator extends Machines {
-	constructor(x, y, width, height) {
-		super(x, y, width, height, 'rgba(0, 0, 255, 1)')
+class Cultivator extends Machine {
+	constructor(x, y, width, height, angle, transports) {
+		super(x, y, width, height, angle, transports, 'rgba(0, 0, 255, 1)')
 		this.type = 'cultivator'
 	}
 }
 
-class Fertilizer extends Machines {
-	constructor(x, y, width, height) {
-		super(x, y, width, height, 'rgba(255, 255, 0, 1)')
+class Fertilizer extends Machine {
+	constructor(x, y, width, height, angle, transports) {
+		super(x, y, width, height, angle, transports, 'rgba(255, 255, 0, 1)')
 		this.type = 'fertilizer'
 	}
 }
 
-class Harvester extends Machines {
-	constructor(x, y, width, height) {
-		super(x, y, width, height, 'rgba(255, 0, 0, 1)')
+class Harvester extends Machine {
+	constructor(x, y, width, height, angle, transports) {
+		super(x, y, width, height, angle, transports, 'rgba(255, 0, 0, 1)')
 		this.type = 'harvester'
 	}
 }

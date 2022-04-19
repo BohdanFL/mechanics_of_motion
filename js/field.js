@@ -15,41 +15,21 @@ class FieldUnit {
 		this.harvested = false
 
 		this.color = `hsl(95, ${this.growingProgress}%, 30%)`
-		this.points = [{
-				x: x,
-				y: y + this.height
-			},
-			{
-				x: x + this.width,
-				y: y + this.height
-			},
-			{
-				x: x + this.width,
-				y: y
-			},
-			{
-				x: x,
-				y: y
-			}
-		]
-
 		this.vertex = []
-		this.vertex[0] = new Vector(this.points[0].x, this.points[3].y);
-		this.vertex[1] = new Vector(this.points[1].x, this.points[2].y);
-		this.vertex[2] = new Vector(this.points[2].x, this.points[1].y);
-		this.vertex[3] = new Vector(this.points[3].x, this.points[0].y);
 
-		this.edge = this.vertex[1].subtr(this.vertex[0]);
-		this.length = this.edge.mag();
-		this.dir = this.edge.unit();
+		this.setVectors()
+		this.dir = getDirection(this.vertex)
+	}
+	setVectors() {
+		this.vertex[0] = new Vector(this.x, this.y + this.height)
+		this.vertex[1] = new Vector(this.x + this.width, this.y + this.height)
+		this.vertex[2] = new Vector(this.x + this.width, this.y)
+		this.vertex[3] = new Vector(this.x, this.y)
 	}
 }
 
 class Field {
-	constructor(partsX, partsY, {
-		x,
-		y
-	}, machines) {
+	constructor(x, y, partsX, partsY, machines) {
 		this.partsX = partsX;
 		this.partsY = partsY;
 		this.x = x;
@@ -59,22 +39,28 @@ class Field {
 		this.unitHeight = Math.round(canvas.width / partsX);
 		this.width = this.x + (this.partsX) * this.unitWidth + (this.gap * (this.partsX))
 		this.height = this.y + (this.partsY) * this.unitHeight + (this.gap * (this.partsY))
-		// this.unitWidth = 20
-		// this.unitHeight = 20
 		this.color = "hsl(25, 50%, 20%)"
-		this.units = [];
 		this.machines = machines
+		this.units = [];
 		this.unitsCollide = []
-		this.calculationOfPoint();
+		this.init();
+	}
+
+	drawField() {
+		ctx.fillStyle = this.color
+		ctx.fillRect(this.x, this.y, this.width, this.height)
 	}
 
 	draw() {
-		ctx.fillStyle = this.color
-		ctx.fillRect(this.x, this.y, this.width, this.height)
-		this.unitsCollide = []
+		this.drawField()
 		this.unitsCollide = this.units.filter(unit => {
-
 			this.machines.forEach(machine => {
+				// if (machine instanceof Player) {
+				// 	if (sat(machine, unit)) {
+				// 		unit.grown = true
+				// 	}
+				// 	return
+				// }
 				if (sat(machine, unit) && machine.isConnected) {
 					switch (machine.type) {
 						case 'sowing':
@@ -95,10 +81,24 @@ class Field {
 								unit.harvested = false
 								unit.grown = false
 								unit.growingProgress = 0
+								if (unit.fertilized) {
+									unit.fertilized = false
+								}
 							}
 							break;
 						case 'fertilizer':
-
+							if ((!unit.harvested || !unit.grown) && unit.growingProgress) {
+								unit.fertilized = true
+								if (unit.growingProgress >= 33 && unit.growingProgress <= 66) {
+									unit.color = `hsl(95, 33%, ${unit.fertilized ? 20 : 30}%)`
+								} else {
+									unit.color = `hsl(95, 66%, ${unit.fertilized ? 20 : 30}%)`
+								}
+							}
+							if (!unit.growingProgress) {
+								unit.fertilized = true
+								unit.color = "hsl(25, 50%, 10%)"
+							}
 							break;
 						default:
 							throw new Error('Not exist type')
@@ -110,23 +110,26 @@ class Field {
 				unit.cultivated = false
 				return false
 			}
-			if (unit.growingProgress > 0 || unit.grown || unit.harvested) {
+			if (unit.growingProgress > 0 || unit.grown || unit.harvested || unit.fertilized) {
 				return unit
 			}
 		})
+
 		if (this.unitsCollide.length) {
 			this.unitsCollide.forEach(unit => {
-
-				if (unit.growingProgress <= 100 && !unit.grown) {
+				if (unit.growingProgress <= 100 && unit.growingProgress !== 0 && !unit.grown) {
 					if ((unit.growingProgress / 33 === 1) || (unit.growingProgress / 33 === 2)) {
-						unit.color = `hsl(95, ${unit.growingProgress}%, 30%)`
+						unit.color = `hsl(95, ${unit.growingProgress}%, ${unit.fertilized ? 20 : 30}%)`
 					}
-					unit.growingProgress += 1 / 4
+					unit.growingProgress += 1 / 8
 				}
 				if (unit.growingProgress >= 100) {
 					unit.grown = true
 				}
 				if (unit.grown) {
+					if (unit.fertilized) {
+						unit.fertilized = false
+					}
 					unit.color = 'hsl(50, 70%, 30%)'
 				}
 				if (unit.harvested) {
@@ -134,13 +137,12 @@ class Field {
 				}
 
 				ctx.fillStyle = unit.color
-				ctx.fillRect(unit.points[3].x, unit.points[3].y, this.unitWidth, this.unitHeight)
+				ctx.fillRect(unit.vertex[3].x, unit.vertex[3].y, this.unitWidth, this.unitHeight)
 			})
 		}
 	}
 
-
-	calculationOfPoint() {
+	init() {
 		for (let i = 0; i < this.partsY; i++) {
 			for (let j = 0; j < this.partsX; j++) {
 				const unitX = this.x + j * this.unitWidth + (this.gap * j);
@@ -151,4 +153,10 @@ class Field {
 			}
 		}
 	}
+
+	addMachine(machine) {
+		this.machines.push(machine)
+	}
 }
+
+// TODO: Refactor Field.draw function
