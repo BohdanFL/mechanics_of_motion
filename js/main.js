@@ -20,7 +20,9 @@ addEventListener("resize", () => {
 })
 
 
-
+setTimeout(() => {
+	alert("The keys Z and C switch between transports")
+}, 300);
 
 /** Main
  *  Cars
