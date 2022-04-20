@@ -72,6 +72,7 @@ class Field {
 								unit.harvested = true
 								unit.grown = false
 								unit.growingProgress = 0
+								game.money += 1
 							}
 							break;
 						case 'cultivator':

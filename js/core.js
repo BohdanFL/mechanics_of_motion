@@ -9,8 +9,8 @@ class Box {
 		this.speed = 0
 		this.angle = angle
 		this.radian = this.angle * (Math.PI / 180)
-
 		this.color = color
+		this.tempColor = color
 
 		this.vertex = []
 		this.init()
@@ -69,8 +69,8 @@ class Transport extends Box {
 		this.velocity = 0.12
 		this.maxSpeed = 6
 		this.turnSpeed = 1.4
-		this.fuel = 100
-
+		this.fuel = 120
+		this.fuelConsumption = 1 / 128
 		this.refDir = this.dir
 		this.disableMove = true
 	}
@@ -86,9 +86,13 @@ class Transport extends Box {
 
 	draw() {
 		if (this.disableMove) {
-			this.color = 'black'
+			this.color = this.tempColor
 		} else {
-			this.color = 'yellow'
+			let color = this.tempColor.slice(0, -1).slice(4).split(',')
+			let colorDeg = parseInt(color[0])
+			let brightness = parseInt(color[1].slice(0, -1))
+			let lightness = parseInt(color[2].slice(0, -1))
+			this.color = `hsl(${colorDeg}, ${brightness + 40}%, ${lightness + 10}%)`
 		}
 		super.draw()
 		this.x += this.speedTurnX
@@ -124,6 +128,7 @@ class Transport extends Box {
 
 	moveUp() {
 		if (keys.KeyW || keys.ArrowUp) {
+			this.fuel -= this.fuelConsumption
 			if (this.maxSpeed >= this.speed) {
 				let stopVelocity = this.speed < 0 ? 1.5 : 1;
 				this.speed += this.velocity * stopVelocity;
@@ -139,6 +144,7 @@ class Transport extends Box {
 
 	moveDown() {
 		if (keys.KeyS || keys.ArrowDown) {
+			this.fuel -= this.fuelConsumption
 			if (-this.maxSpeed / 1.5 <= this.speed) {
 				let stopVelocity = this.speed > 0 ? 1.5 : 1;
 				this.speed -= this.velocity * stopVelocity;
@@ -155,7 +161,6 @@ class Transport extends Box {
 	move() {
 		let rotMat = rotMx(this.radian);
 		this.dir = rotMat.multiplyVec(this.refDir);
-
 		this.moveUp()
 		this.moveDown()
 	}
@@ -189,7 +194,7 @@ class Transport extends Box {
 	}
 
 	update() {
-		if (this.disableMove) {
+		if (this.disableMove || this.fuel <= 0) {
 			this.smoothStop()
 			return
 		}

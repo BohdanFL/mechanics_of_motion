@@ -34,7 +34,7 @@ addEventListener("resize", () => {
 
 /** Bugs
  *  Взяття двох machines одночасно
- *  Відєднується machine, коли переключаєшся на інший transport
+ *  Коли fuel закінчився поворот при up або down не відбувається
  */
 
 
@@ -44,7 +44,8 @@ addEventListener("resize", () => {
  *  Обмеження по переміщенню
  *  Ranging for maxSpeed, velocity, turnSpeed, stopVelocity and etc.
  */
-93 + 245 + 359 + 13 + 92 + 174 + 83 + 52 + 149 + 26 + 65 + 75 + (252 - 88)
+
+// // *  Відєднується machine, коли переключаєшся на інший transport - done
 // //  Switch between machines - done
 // // Переписати все на вектори - done
 // // Рефакторінг коду(переписати в клас) - done

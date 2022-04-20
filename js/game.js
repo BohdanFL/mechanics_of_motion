@@ -10,8 +10,8 @@ class Game {
 		this.fields.push(new Field(x, y, partsX, partsY, this.machines))
 	}
 
-	addTransport(x, y, width, height, angle) {
-		let transport = new Transport(x, y, width, height, angle)
+	addTransport(x, y, width, height, angle, color) {
+		let transport = new Transport(x, y, width, height, angle, color)
 		this.transports.push(transport)
 		this.machines.forEach(machine => {
 			machine.addTransport(transport)
@@ -46,10 +46,12 @@ class Game {
 	start() {
 		addEventListener("keydown", startMove)
 		addEventListener("keyup", stopMove)
+		ctx.font = '24px monospace'
+		// ctx.fontWeight = 'bold'
 
 		// create transport
 		for (let i = 1; i <= 4; i++) {
-			this.addTransport(80 * i, 300, 40, 80)
+			this.addTransport(80 * i, 300, 40, 80, 0, `hsl(${(360/4) * i}, 30%, 40%)`)
 		}
 
 		const switcher = new Switcher(this.transports)
@@ -74,5 +76,19 @@ class Game {
 		this.fields.forEach(field => field.draw())
 		this.machines.forEach(machine => machine.draw())
 		this.transports.forEach(transport => transport.draw())
+
+		this.showInfo()
+	}
+
+	showInfo() {
+		let activeTransport = this.transports.find(t => !t.disableMove)
+		const fuelText = `Fuel: ${Math.abs(activeTransport.fuel.toFixed())}`
+		const moneyText = `Money: ${this.money}`
+		const fuelTextInfo = ctx.measureText(fuelText)
+		const moneyTextInfo = ctx.measureText(moneyText)
+		ctx.fillStyle = activeTransport.color
+		ctx.fillText(fuelText, fuelTextInfo.width / 3, canvas.height - 20)
+		ctx.fillStyle = 'gold'
+		ctx.fillText(moneyText, fuelTextInfo.width / 3 + fuelTextInfo.width + moneyTextInfo.width / 3, canvas.height - 20)
 	}
 }
