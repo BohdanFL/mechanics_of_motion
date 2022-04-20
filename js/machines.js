@@ -5,6 +5,7 @@ class Machine extends Box {
 		this.type = null
 		this.isConnected = false
 		this.transports = transports || []
+		this.activeTransport = null
 
 		window.addEventListener("keydown", (e) => {
 			if (e.code === 'Space' && !this.isConnected) {

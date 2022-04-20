@@ -60,7 +60,7 @@ class Field {
 				// 	}
 				// 	return
 				// }
-				if (sat(machine, unit) && machine.isConnected) {
+				if (sat(machine, unit) && machine.isConnected && !machine.activeTransport.disableMove) {
 					switch (machine.type) {
 						case 'sowing':
 							if (!unit.growingProgress) {
