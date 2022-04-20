@@ -46,14 +46,12 @@ class Game {
 	start() {
 		addEventListener("keydown", startMove)
 		addEventListener("keyup", stopMove)
-		ctx.font = '24px monospace'
-		// ctx.fontWeight = 'bold'
 
 		// create transport
 		for (let i = 1; i <= 4; i++) {
 			this.addTransport(80 * i, 300, 40, 80, 0, `hsl(${(360/4) * i}, 30%, 40%)`)
 		}
-
+		// enable switch between transports
 		const switcher = new Switcher(this.transports)
 		switcher.on()
 
@@ -66,9 +64,6 @@ class Game {
 
 		// create field
 		this.addField(0, 0, 128, 16, this.machines)
-
-		// enable switch between transports
-
 	}
 
 	update() {
@@ -84,6 +79,7 @@ class Game {
 		let activeTransport = this.transports.find(t => !t.disableMove)
 		const fuelText = `Fuel: ${Math.abs(activeTransport.fuel.toFixed())}`
 		const moneyText = `Money: ${this.money}`
+		ctx.font = '24px monospace'
 		const fuelTextInfo = ctx.measureText(fuelText)
 		const moneyTextInfo = ctx.measureText(moneyText)
 		ctx.fillStyle = activeTransport.color

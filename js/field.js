@@ -72,6 +72,10 @@ class Field {
 								unit.harvested = true
 								unit.grown = false
 								unit.growingProgress = 0
+								if (unit.fertilized) {
+									game.money += 2
+									return
+								}
 								game.money += 1
 							}
 							break;
@@ -132,12 +136,13 @@ class Field {
 				unit.grown = true
 			}
 			if (unit.grown) {
-				if (unit.fertilized) {
-					unit.fertilized = false
-				}
+
 				unit.color = 'hsl(50, 70%, 30%)'
 			}
 			if (unit.harvested) {
+				if (unit.fertilized) {
+					unit.fertilized = false
+				}
 				unit.color = 'hsl(50, 30%, 50%)'
 			}
 
