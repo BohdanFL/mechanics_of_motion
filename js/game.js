@@ -3,6 +3,7 @@ class Game {
 		this.fields = fields
 		this.machines = machines
 		this.transports = transports
+		this.money = 0
 	}
 
 	addField(x, y, partsX, partsY) {
@@ -51,6 +52,8 @@ class Game {
 			this.addTransport(80 * i, 300, 40, 80)
 		}
 
+		const switcher = new Switcher(this.transports)
+		switcher.on()
 
 		// create machines
 		let i = 1
@@ -60,11 +63,10 @@ class Game {
 		}
 
 		// create field
-		this.addField(0, 0, 64, 16, this.machines)
+		this.addField(0, 0, 128, 16, this.machines)
 
 		// enable switch between transports
-		const switcher = new Switcher(this.transports)
-		switcher.on()
+
 	}
 
 	update() {

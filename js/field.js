@@ -4,8 +4,6 @@ class FieldUnit {
 		this.y = y
 		this.width = width
 		this.height = height
-		// this.isGrew = false
-		// this.isGrowing = 0
 
 		this.cultivated = false
 		this.sown = false
@@ -17,14 +15,8 @@ class FieldUnit {
 		this.color = `hsl(95, ${this.growingProgress}%, 30%)`
 		this.vertex = []
 
-		this.setVectors()
+		setVectorsForFieldUnit(this)
 		this.dir = getDirection(this.vertex)
-	}
-	setVectors() {
-		this.vertex[0] = new Vector(this.x, this.y + this.height)
-		this.vertex[1] = new Vector(this.x + this.width, this.y + this.height)
-		this.vertex[2] = new Vector(this.x + this.width, this.y)
-		this.vertex[3] = new Vector(this.x, this.y)
 	}
 }
 
@@ -34,9 +26,9 @@ class Field {
 		this.partsY = partsY;
 		this.x = x;
 		this.y = y;
-		this.gap = 0
-		this.unitWidth = Math.round(canvas.width / partsX);
-		this.unitHeight = Math.round(canvas.width / partsX);
+		this.gap = canvas.width / this.partsX
+		this.unitWidth = canvas.width / this.partsX;
+		this.unitHeight = canvas.width / this.partsX;
 		this.width = this.x + (this.partsX) * this.unitWidth + (this.gap * (this.partsX))
 		this.height = this.y + (this.partsY) * this.unitHeight + (this.gap * (this.partsY))
 		this.color = "hsl(25, 50%, 20%)"
@@ -46,13 +38,20 @@ class Field {
 		this.init();
 	}
 
+	resize() {
+		this.unitWidth = canvas.width / this.partsX;
+		this.unitHeight = canvas.width / this.partsX;
+		this.width = this.x + (this.partsX) * this.unitWidth + (this.gap * (this.partsX))
+		this.height = this.y + (this.partsY) * this.unitHeight + (this.gap * (this.partsY))
+		this.init();
+	}
+
 	drawField() {
 		ctx.fillStyle = this.color
 		ctx.fillRect(this.x, this.y, this.width, this.height)
 	}
 
-	draw() {
-		this.drawField()
+	updateUnitsCollide() {
 		this.unitsCollide = this.units.filter(unit => {
 			this.machines.forEach(machine => {
 				// if (machine instanceof Player) {
@@ -114,35 +113,40 @@ class Field {
 				return unit
 			}
 		})
+	}
 
-		if (this.unitsCollide.length) {
-			this.unitsCollide.forEach(unit => {
-				if (unit.growingProgress <= 100 && unit.growingProgress !== 0 && !unit.grown) {
-					if ((unit.growingProgress / 33 === 1) || (unit.growingProgress / 33 === 2)) {
-						unit.color = `hsl(95, ${unit.growingProgress}%, ${unit.fertilized ? 20 : 30}%)`
-					}
-					unit.growingProgress += 1 / 8
-				}
-				if (unit.growingProgress >= 100) {
-					unit.grown = true
-				}
-				if (unit.grown) {
-					if (unit.fertilized) {
-						unit.fertilized = false
-					}
-					unit.color = 'hsl(50, 70%, 30%)'
-				}
-				if (unit.harvested) {
-					unit.color = 'hsl(50, 30%, 50%)'
-				}
+	draw() {
+		this.drawField()
 
-				ctx.fillStyle = unit.color
-				ctx.fillRect(unit.vertex[3].x, unit.vertex[3].y, this.unitWidth, this.unitHeight)
-			})
-		}
+		this.updateUnitsCollide()
+
+		this.unitsCollide.forEach(unit => {
+			if (unit.growingProgress <= 100 && unit.growingProgress !== 0 && !unit.grown) {
+				if ((unit.growingProgress / 33 === 1) || (unit.growingProgress / 33 === 2)) {
+					unit.color = `hsl(95, ${unit.growingProgress}%, ${unit.fertilized ? 20 : 30}%)`
+				}
+				unit.growingProgress += 1 / 8
+			}
+			if (unit.growingProgress >= 100) {
+				unit.grown = true
+			}
+			if (unit.grown) {
+				if (unit.fertilized) {
+					unit.fertilized = false
+				}
+				unit.color = 'hsl(50, 70%, 30%)'
+			}
+			if (unit.harvested) {
+				unit.color = 'hsl(50, 30%, 50%)'
+			}
+
+			ctx.fillStyle = unit.color
+			ctx.fillRect(unit.vertex[3].x, unit.vertex[3].y, this.unitWidth, this.unitHeight)
+		})
 	}
 
 	init() {
+		this.units = []
 		for (let i = 0; i < this.partsY; i++) {
 			for (let j = 0; j < this.partsX; j++) {
 				const unitX = this.x + j * this.unitWidth + (this.gap * j);

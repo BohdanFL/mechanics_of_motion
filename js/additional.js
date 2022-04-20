@@ -55,13 +55,11 @@ function projShapeOntoAxis(axis, obj) {
 	}
 }
 
-function setVectors(points) {
-	const vertex = []
-	vertex[0] = new Vector(points[0].x, points[0].y);
-	vertex[1] = new Vector(points[1].x, points[1].y);
-	vertex[2] = new Vector(points[2].x, points[2].y);
-	vertex[3] = new Vector(points[3].x, points[3].y);
-	return vertex
+function setVectorsForFieldUnit(unit) {
+	unit.vertex[0] = new Vector(unit.x, unit.y + unit.height)
+	unit.vertex[1] = new Vector(unit.x + unit.width, unit.y + unit.height)
+	unit.vertex[2] = new Vector(unit.x + unit.width, unit.y)
+	unit.vertex[3] = new Vector(unit.x, unit.y)
 }
 
 function getDirection(vertex) {

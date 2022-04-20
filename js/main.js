@@ -1,6 +1,3 @@
-// const field = new Field(0, 0, 64, 16, machines);
-// const fields = [field]
-
 const game = new Game()
 game.start()
 
@@ -19,6 +16,7 @@ requestAnimationFrame(update)
 addEventListener("resize", () => {
 	canvas.height = innerHeight
 	canvas.width = innerWidth
+	game.fields[0].resize()
 })
 
 
@@ -46,7 +44,7 @@ addEventListener("resize", () => {
  *  Обмеження по переміщенню
  *  Ranging for maxSpeed, velocity, turnSpeed, stopVelocity and etc.
  */
-
+93 + 245 + 359 + 13 + 92 + 174 + 83 + 52 + 149 + 26 + 65 + 75 + (252 - 88)
 // //  Switch between machines - done
 // // Переписати все на вектори - done
 // // Рефакторінг коду(переписати в клас) - done

@@ -69,6 +69,7 @@ class Transport extends Box {
 		this.velocity = 0.12
 		this.maxSpeed = 6
 		this.turnSpeed = 1.4
+		this.fuel = 100
 
 		this.refDir = this.dir
 		this.disableMove = true
@@ -160,36 +161,39 @@ class Transport extends Box {
 	}
 
 	smoothStop() {
-		if (!(keys.KeyS || keys.KeyW || keys.ArrowDown || keys.ArrowUp)) {
+		if (!(keys.KeyS || keys.KeyW || keys.ArrowDown || keys.ArrowUp) || this.disableMove) {
 			if (this.speed < 0) {
 				this.speed += this.velocity;
 				if (this.speed >= -this.velocity) this.speed = 0;
 
-				if (this.speed > -1.5 && this.speed < 0) {
-					this.rotate(-this.turnSpeed * Math.abs(this.speed));
-				} else {
-					this.rotate(-this.turnSpeed);
+				if (!this.disableMove) {
+					if (this.speed > -1.5 && this.speed < 0) {
+						this.rotate(-this.turnSpeed * Math.abs(this.speed));
+					} else {
+						this.rotate(-this.turnSpeed);
+					}
 				}
-
 			} else if (this.speed > 0) {
 				this.speed -= this.velocity;
 				if (this.speed <= this.velocity) this.speed = 0;
 
-				if (this.speed < 1.5 && this.speed > 0) {
-					this.rotate(this.turnSpeed * this.speed);
-				} else {
-					this.rotate(this.turnSpeed);
+				if (!this.disableMove) {
+					if (this.speed < 1.5 && this.speed > 0) {
+						this.rotate(this.turnSpeed * this.speed);
+					} else {
+						this.rotate(this.turnSpeed);
+					}
 				}
 			}
 		}
 	}
 
 	update() {
-		if (!this.disableMove) {
-			this.move()
+		if (this.disableMove) {
 			this.smoothStop()
 			return
 		}
-		this.speed = 0
+		this.move()
+		this.smoothStop()
 	}
 }

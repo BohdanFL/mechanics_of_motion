@@ -5,19 +5,18 @@ class Machine extends Box {
 		this.type = null
 		this.isConnected = false
 		this.transports = transports || []
-		this.activeTransport
 
 		window.addEventListener("keydown", (e) => {
 			if (e.code === 'Space' && !this.isConnected) {
 				this.transports.forEach(transport => {
-					if (sat(transport, this)) {
+					if (sat(transport, this) && !transport.disableMove) {
 						this.activeTransport = transport
 						this.isConnected = true
-						this.x = transport.x - (this.width - transport.width) / 2
-						this.y = transport.y + transport.height
+						this.x = this.activeTransport.x - (this.width - this.activeTransport.width) / 2
+						this.y = this.activeTransport.y + this.activeTransport.height
 					}
 				})
-			} else if (e.code === 'Space' && this.isConnected) {
+			} else if (e.code === 'Space' && this.isConnected && this.activeTransport && !this.activeTransport.disableMove) {
 				this.isConnected = false
 				this.activeTransport = null
 			}
