@@ -63,12 +63,16 @@ class Box {
 
 
 class Transport extends Box {
-	constructor(x, y, width, height, angle, color) {
+	constructor(x, y, width, height, angle, color, physics = {}) {
 		super(x, y, width, height, angle, color)
 
-		this.velocity = 0.12
-		this.maxSpeed = 6
-		this.turnSpeed = 1.4
+		this.velocity = physics.velocity || 0.12
+		this.maxSpeed = physics.maxSpeed || 6
+		this.maxSpeedBackKoef = 0.5
+		this.maxSpeedBack = this.maxSpeed * (physics.maxSpeedBackKoef || this.maxSpeedBackKoef)
+		this.friction = physics.friction || 0.08
+		this.turnStep = physics.turnStep || 1.2
+		this.braking = this.friction * 20
 		this.fuel = 120
 		this.fuelConsumption = 1 / 128
 		this.refDir = this.dir
@@ -100,15 +104,15 @@ class Transport extends Box {
 		this.update()
 	}
 
-	rotate(turnSpeed) {
+	rotate(turnStep) {
 		// left
 		if (keys.KeyA || keys.ArrowLeft) {
 			if (keys.KeyS || keys.ArrowDown) {
 				if (this.angle >= 360) this.angle = 0
-				this.angle += turnSpeed
+				this.angle += turnStep
 			} else {
 				if (this.angle <= 0) this.angle = 360
-				this.angle -= turnSpeed
+				this.angle -= turnStep
 			}
 		}
 
@@ -116,10 +120,10 @@ class Transport extends Box {
 		if (keys.KeyD || keys.ArrowRight) {
 			if (keys.KeyS || keys.ArrowDown) {
 				if (this.angle <= 0) this.angle = 360
-				this.angle -= turnSpeed
+				this.angle -= turnStep
 			} else {
 				if (this.angle >= 360) this.angle = 0
-				this.angle += turnSpeed
+				this.angle += turnStep
 			}
 		}
 
@@ -129,31 +133,36 @@ class Transport extends Box {
 	moveUp() {
 		if (keys.KeyW || keys.ArrowUp) {
 			this.fuel -= this.fuelConsumption
-			if (this.maxSpeed >= this.speed) {
-				let stopVelocity = this.speed < 0 ? 1.5 : 1;
+			if (this.maxSpeed > this.speed) {
+				let stopVelocity = this.speed < 0 ? this.braking : 1;
 				this.speed += this.velocity * stopVelocity;
+			} else {
+				this.speed = this.maxSpeed
 			}
 
-			if (this.speed < 1.5 && this.speed > 0) {
-				this.rotate(this.turnSpeed * this.speed);
-			} else {
-				this.rotate(this.turnSpeed);
+			if (this.speed < this.maxSpeed / 5 && this.speed > 0) {
+				this.rotate(this.turnStep * this.speed);
+				return
 			}
+			this.rotate(this.turnStep);
 		}
 	}
 
 	moveDown() {
 		if (keys.KeyS || keys.ArrowDown) {
 			this.fuel -= this.fuelConsumption
-			if (-this.maxSpeed / 1.5 <= this.speed) {
-				let stopVelocity = this.speed > 0 ? 1.5 : 1;
+			if (-this.maxSpeedBack < this.speed) {
+				let stopVelocity = this.speed > 0 ? this.braking : 1;
 				this.speed -= this.velocity * stopVelocity;
+			} else {
+				this.speed = -this.maxSpeedBack
+
 			}
 
-			if (this.speed > -1.5 && this.speed < 0) {
-				this.rotate(this.turnSpeed * Math.abs(this.speed));
+			if (this.speed > -this.maxSpeed / 3 && this.speed < 0) {
+				this.rotate(this.turnStep * Math.abs(this.speed));
 			} else {
-				this.rotate(this.turnSpeed);
+				this.rotate(this.turnStep);
 			}
 		}
 	}
@@ -168,25 +177,25 @@ class Transport extends Box {
 	smoothStop() {
 		if (!(keys.KeyS || keys.KeyW || keys.ArrowDown || keys.ArrowUp) || this.disableMove) {
 			if (this.speed < 0) {
-				this.speed += this.velocity;
-				if (this.speed >= -this.velocity) this.speed = 0;
+				this.speed += this.friction;
+				if (this.speed >= -this.friction) this.speed = 0;
 
 				if (!this.disableMove) {
 					if (this.speed > -1.5 && this.speed < 0) {
-						this.rotate(-this.turnSpeed * Math.abs(this.speed));
+						this.rotate(-this.turnStep * Math.abs(this.speed));
 					} else {
-						this.rotate(-this.turnSpeed);
+						this.rotate(-this.turnStep);
 					}
 				}
 			} else if (this.speed > 0) {
-				this.speed -= this.velocity;
-				if (this.speed <= this.velocity) this.speed = 0;
+				this.speed -= this.friction;
+				if (this.speed <= this.friction) this.speed = 0;
 
 				if (!this.disableMove) {
 					if (this.speed < 1.5 && this.speed > 0) {
-						this.rotate(this.turnSpeed * this.speed);
+						this.rotate(this.turnStep * this.speed);
 					} else {
-						this.rotate(this.turnSpeed);
+						this.rotate(this.turnStep);
 					}
 				}
 			}

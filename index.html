@@ -16,6 +16,10 @@
 			user-select: none;
 		}
 
+		html {
+			font-size: 16px;
+		}
+
 		body {
 			overflow: hidden;
 			font-family: monospace;
@@ -31,6 +35,23 @@
 			left: 50%;
 			color: white;
 			font-size: 1.2em;
+		}
+
+		.settings {
+			position: absolute;
+			top: 5px;
+			padding: 10px;
+			color: white;
+			font-size: 1rem;
+		}
+
+		.settings__title,
+		.settings__range {
+			cursor: pointer;
+		}
+
+		.settings-advanced {
+			margin-left: 10px;
 		}
 	</style>
 </head>
@@ -50,9 +71,51 @@
 			Angle: <span id="angle">0 deg</span>
 		</p>
 		<p>
-			Direction: <span id="direction">(0, 0)</span> -->
-		</p>
+			Direction: <span id="direction">(0, 0)</span> 
+		</p> -->
 	</div>
+	<details class="settings">
+		<summary class="settings__title">Налаштування</summary>
+		<ul class="settings__list">
+			<li class="settings__item">
+				Макс. швидкість:
+				<input class="settings__range" id="max-speed" value="6" min="1" max="10" step="0.1" type="range">
+				(<span id="max-speed-value">6</span>)
+			</li>
+			<li class="settings__item">
+				Прискорення:
+				<input class="settings__range" id="velocity" value="0.12" min="0.01" max="1" step="0.01" type="range">
+				(<span id="velocity-value">0.12</span>)
+			</li>
+			<li class="settings__item">
+				Крок повороту:
+				<input class="settings__range" id="turn-step" value="1.2" min="0.1" max="5" step="0.1" type="range">
+				(<span id="turn-step-value">1.2</span>)
+			</li>
+			<li class="settings__item">
+				Зчеплення:
+				<input class="settings__range" id="friction" value="0.08" min="0.01" max="1" step="0.01" type="range">
+				(<span id="friction-value">0.08</span>)
+			</li>
+		</ul>
+		<details class="settings-advanced">
+			<summary class="settings-advanced__title">Продвинуті налаштування</summary>
+			<ul class="settings-advanced__list">
+				<li class="settings-advanced__item">
+					Тормозіння:
+					<input class="settings-advanced__range" id="braking" value="1.6" min="0.1" max="5" step="0.1"
+						type="range">
+					(<span id="braking-value">1.6</span>)
+				</li>
+				<li class="settings-advanced__item">
+					Коефіцієнт задньої швидкості:
+					<input class="settings-advanced__range" id="max-speed-back-koef" value="0.5" min="0.1" max="3"
+						step="0.1" type="range">
+					(<span id="max-speed-back-koef-value">0.5</span>)
+				</li>
+			</ul>
+		</details>
+	</details>
 	<script src="js/vars.js"></script>
 	<script src="js/math.js"></script>
 	<script src="js/additional.js"></script>

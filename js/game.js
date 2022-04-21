@@ -56,14 +56,16 @@ class Game {
 		switcher.on()
 
 		// create machines
-		let i = 1
-		for (const key in MACHINE_TYPE) {
-			this.addMachine((80 * i - 20), 400, 80, 40, key)
-			i++
+		for (let i = 0; i <= 1; i++) {
+			let i2 = 1
+			for (const key in MACHINE_TYPE) {
+				this.addMachine((80 * i2 - 20), 400 + (i * 50), 80, 40, key)
+				i2++
+			}
 		}
 
 		// create field
-		this.addField(0, 0, 128, 16, this.machines)
+		this.addField(0, 0, 64, 16, this.machines)
 	}
 
 	update() {
@@ -86,5 +88,34 @@ class Game {
 		ctx.fillText(fuelText, fuelTextInfo.width / 3, canvas.height - 20)
 		ctx.fillStyle = 'gold'
 		ctx.fillText(moneyText, fuelTextInfo.width / 3 + fuelTextInfo.width + moneyTextInfo.width / 3, canvas.height - 20)
+		$info.innerHTML = `
+			<span>${Math.abs(activeTransport.speed.toFixed(1))} km/h</span>
+		`
+	}
+
+	setPhysicsForTransport(physics) {
+		console.log(physics)
+		this.transports.forEach(t => {
+			if (physics.velocity) {
+				t.velocity = physics.velocity
+			}
+			if (physics.maxSpeed) {
+				t.maxSpeed = physics.maxSpeed
+				t.maxSpeedBack = t.maxSpeed * t.maxSpeedBackKoef
+			}
+			if (physics.turnStep) {
+				t.turnStep = physics.turnStep
+			}
+			if (physics.friction) {
+				t.friction = physics.friction
+			}
+			if (physics.braking) {
+				t.braking = physics.braking
+			}
+			if (physics.maxSpeedBackKoef) {
+				t.maxSpeedBackKoef = physics.maxSpeedBackKoef
+				t.maxSpeedBack = t.maxSpeed * t.maxSpeedBackKoef
+			}
+		})
 	}
 }

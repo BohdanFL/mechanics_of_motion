@@ -26,7 +26,7 @@ class Field {
 		this.partsY = partsY;
 		this.x = x;
 		this.y = y;
-		this.gap = canvas.width / this.partsX
+		this.gap = 0
 		this.unitWidth = canvas.width / this.partsX;
 		this.unitHeight = canvas.width / this.partsX;
 		this.width = this.x + (this.partsX) * this.unitWidth + (this.gap * (this.partsX))

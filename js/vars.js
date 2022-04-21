@@ -1,7 +1,17 @@
+'use strict'
+
 const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
 
-const info = document.getElementById("info")
+const $info = document.getElementById("info")
+const rangeMaxSpeed = document.getElementById("max-speed")
+const rangeVelocity = document.getElementById("velocity")
+const rangeTurnStep = document.getElementById("turn-step")
+const rangeFriction = document.getElementById("friction")
+const rangeBraking = document.getElementById("braking")
+const rangeMaxSpeedBackKoef = document.getElementById("max-speed-back-koef")
+
+
 const keys = {
 	KeyW: false,
 	KeyA: false,
