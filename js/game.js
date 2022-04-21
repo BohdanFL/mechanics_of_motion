@@ -94,25 +94,24 @@ class Game {
 	}
 
 	setPhysicsForTransport(physics) {
-		console.log(physics)
 		this.transports.forEach(t => {
-			if (physics.velocity) {
+			if (physics.velocity!== undefined) {
 				t.velocity = physics.velocity
 			}
-			if (physics.maxSpeed) {
+			if (physics.maxSpeed !== undefined) {
 				t.maxSpeed = physics.maxSpeed
 				t.maxSpeedBack = t.maxSpeed * t.maxSpeedBackKoef
 			}
-			if (physics.turnStep) {
+			if (physics.turnStep!== undefined) {
 				t.turnStep = physics.turnStep
 			}
-			if (physics.friction) {
+			if (physics.friction!== undefined) {
 				t.friction = physics.friction
 			}
-			if (physics.braking) {
+			if (physics.braking!== undefined) {
 				t.braking = physics.braking
 			}
-			if (physics.maxSpeedBackKoef) {
+			if (physics.maxSpeedBackKoef!== undefined) {
 				t.maxSpeedBackKoef = physics.maxSpeedBackKoef
 				t.maxSpeedBack = t.maxSpeed * t.maxSpeedBackKoef
 			}

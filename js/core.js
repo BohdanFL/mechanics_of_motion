@@ -65,13 +65,12 @@ class Box {
 class Transport extends Box {
 	constructor(x, y, width, height, angle, color, physics = {}) {
 		super(x, y, width, height, angle, color)
-
-		this.velocity = physics.velocity || 0.12
-		this.maxSpeed = physics.maxSpeed || 6
+		this.velocity = physics.velocity ?? 0.12
+		this.maxSpeed = physics.maxSpeed ?? 6
 		this.maxSpeedBackKoef = 0.5
 		this.maxSpeedBack = this.maxSpeed * (physics.maxSpeedBackKoef || this.maxSpeedBackKoef)
-		this.friction = physics.friction || 0.08
-		this.turnStep = physics.turnStep || 1.2
+		this.friction = physics.friction ?? 0.08
+		this.turnStep = physics.turnStep ?? 1.2
 		this.braking = this.friction * 20
 		this.fuel = 120
 		this.fuelConsumption = 1 / 128
@@ -132,8 +131,9 @@ class Transport extends Box {
 
 	moveUp() {
 		if (keys.KeyW || keys.ArrowUp) {
+			console.log(!!this.maxSpeed, this.maxSpeed)
 			this.fuel -= this.fuelConsumption
-			if (this.maxSpeed > this.speed) {
+			if (this.maxSpeed > this.speed && this.maxSpeed) {
 				let stopVelocity = this.speed < 0 ? this.braking : 1;
 				this.speed += this.velocity * stopVelocity;
 			} else {
@@ -151,7 +151,7 @@ class Transport extends Box {
 	moveDown() {
 		if (keys.KeyS || keys.ArrowDown) {
 			this.fuel -= this.fuelConsumption
-			if (-this.maxSpeedBack < this.speed) {
+			if (-this.maxSpeedBack < this.speed && this.maxSpeed) {
 				let stopVelocity = this.speed > 0 ? this.braking : 1;
 				this.speed -= this.velocity * stopVelocity;
 			} else {
@@ -159,19 +159,19 @@ class Transport extends Box {
 
 			}
 
-			if (this.speed > -this.maxSpeed / 3 && this.speed < 0) {
+			if (this.speed > -this.maxSpeed / 5 && this.speed < 0) {
 				this.rotate(this.turnStep * Math.abs(this.speed));
-			} else {
-				this.rotate(this.turnStep);
+				return
 			}
+			this.rotate(this.turnStep);
 		}
 	}
 
 	move() {
 		let rotMat = rotMx(this.radian);
 		this.dir = rotMat.multiplyVec(this.refDir);
-		this.moveUp()
 		this.moveDown()
+		this.moveUp()
 	}
 
 	smoothStop() {

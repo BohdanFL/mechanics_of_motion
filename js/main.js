@@ -55,8 +55,6 @@ rangeMaxSpeedBackKoef.addEventListener('input', e => {
 	document.getElementById(rangeMaxSpeedBackKoef.id + '-value').textContent = rangeMaxSpeedBackKoef.value
 })
 
-
-
 addEventListener("resize", () => {
 	canvas.height = innerHeight
 	canvas.width = innerWidth
