@@ -5,34 +5,41 @@ class Machine extends Box {
 		this.type = null
 		this.isConnected = false
 		this.transports = transports || []
-		this.activeTransport = null
+		this.connectedTransport = null
+		this.connectListener()
+	}
 
+	connectListener() {
+		// Оптимізувати
 		window.addEventListener("keydown", (e) => {
 			if (e.code === 'Space' && !this.isConnected) {
-				this.transports.forEach(transport => {
-					if (sat(transport, this) && !transport.disableMove) {
-						this.activeTransport = transport
+				console.log(this.transports)
+				this.transports.forEach(t => {
+					if (sat(t, this) && !t.disableMove) {
+						this.connectedTransport = t
+						this.connectedTransport.connectedMachine = this
+						this.connectedTransport.isConnected = true
 						this.isConnected = true
-						this.x = this.activeTransport.x - (this.width - this.activeTransport.width) / 2
-						this.y = this.activeTransport.y + this.activeTransport.height
+						this.setConnectedPos()
 					}
 				})
-			} else if (e.code === 'Space' && this.isConnected && this.activeTransport && !this.activeTransport.disableMove) {
+			} else if (e.code === 'Space' && this.isConnected && this.connectedTransport && !this.connectedTransport.disableMove) {
 				this.isConnected = false
-				this.activeTransport = null
+				this.connectedTransport.connectedMachine = null
+				this.connectedTransport.isConnected = true
+				this.connectedTransport = null
 			}
 		})
-
 	}
 
 	setVectors() {
 		this.vertex[0] = new Vector(
-			(this.x + (this.halfWidth - this.a)) + this.speedTurnX,
-			(this.y - this.b) - this.speedTurnY
+			(this.x + (this.halfWidth - this.a)),
+			(this.y - this.b)
 		)
 		this.vertex[1] = new Vector(
-			(this.x + (this.halfWidth + this.a)) + this.speedTurnX,
-			(this.y + this.b) - this.speedTurnY
+			(this.x + (this.halfWidth + this.a)),
+			(this.y + this.b)
 		)
 		this.vertex[2] = new Vector(
 			this.vertex[1].x - this.d,
@@ -45,18 +52,20 @@ class Machine extends Box {
 	}
 
 	draw() {
-		super.draw()
-
-
 		if (this.isConnected) {
-			this.x = this.activeTransport.x - (this.width - this.activeTransport.width) / 2
-			this.y = this.activeTransport.y + this.activeTransport.height
-			this.speed = this.activeTransport.speed
-			this.radian = this.activeTransport.radian
-			this.dir = this.activeTransport.dir
+			this.speed = this.connectedTransport.speed
+			this.radian = this.connectedTransport.radian
+			this.dir = this.connectedTransport.dir
+			this.setConnectedPos()
 		} else {
 			this.speed = 0
 		}
+		super.draw()
+	}
+
+	setConnectedPos() {
+		this.x = this.connectedTransport.x - (this.width - this.connectedTransport.width) / 2
+		this.y = this.connectedTransport.y + this.connectedTransport.height
 		this.x += this.speedTurnX
 		this.y -= this.speedTurnY
 	}
@@ -72,6 +81,8 @@ class SowingMachine extends Machine {
 	constructor(x, y, width, height, angle, transports) {
 		super(x, y, width, height, angle, transports, 'rgba(0, 255, 0, 1)')
 		this.type = 'sowing'
+		this.maxCapacity = 3000
+		this.capacity = this.maxCapacity
 	}
 }
 
@@ -86,12 +97,53 @@ class Fertilizer extends Machine {
 	constructor(x, y, width, height, angle, transports) {
 		super(x, y, width, height, angle, transports, 'rgba(255, 255, 0, 1)')
 		this.type = 'fertilizer'
+		this.maxCapacity = 3000
+		this.capacity = this.maxCapacity
 	}
 }
 
-class Harvester extends Machine {
+class Header extends Machine {
 	constructor(x, y, width, height, angle, transports) {
 		super(x, y, width, height, angle, transports, 'rgba(255, 0, 0, 1)')
-		this.type = 'harvester'
+		this.type = 'header'
+		this.movingX = 0
+		this.movingY = 0
+	}
+
+	setVectors() {
+		this.vertex[0] = new Vector(
+			(this.x + (this.halfWidth - this.a)) + this.movingX,
+			(this.y + (this.height - this.b)) - this.movingY
+		)
+		this.vertex[1] = new Vector(
+			(this.x + (this.halfWidth + this.a))  + this.movingX,
+			(this.y + (this.height + this.b)) - this.movingY
+		)
+		this.vertex[2] = new Vector(
+			this.vertex[1].x + this.d,
+			this.vertex[1].y - this.c
+		)
+		this.vertex[3] = new Vector(
+			this.vertex[0].x + this.d,
+			this.vertex[0].y - this.c
+		)
+	}
+
+	setConnectedPos() {
+		this.movingX = this.connectedTransport.height * this.sin
+		this.movingY = this.connectedTransport.height * this.cos
+
+		this.x = this.connectedTransport.x + this.connectedTransport.halfWidth - this.halfWidth
+		this.y = this.connectedTransport.y + this.connectedTransport.height - this.height
+
+		this.x += this.speedTurnX
+		this.y -= this.speedTurnY
+	}
+}
+
+class Tipper extends Machine{
+	constructor(x, y, width, height, angle, transports) {
+		super(x, y, width, height, angle, transports, 'rgba(0, 255, 255, 1)')
+		this.type = 'tipper'
 	}
 }

@@ -10,7 +10,7 @@ const rangeTurnStep = document.getElementById("turn-step")
 const rangeFriction = document.getElementById("friction")
 const rangeBraking = document.getElementById("braking")
 const rangeMaxSpeedBackKoef = document.getElementById("max-speed-back-koef")
-
+const $settings = document.querySelector(".settings")
 
 const keys = {
 	KeyW: false,
@@ -25,9 +25,18 @@ const keys = {
 
 const MACHINE_TYPE = {
 	sowing: 'sowing',
-	harvester: 'harvester',
 	cultivator: 'cultivator',
-	fertilizer: 'fertilizer'
+	fertilizer: 'fertilizer',
+	header: 'header',
+	tipper: 'tipper',
 }
+
+const TRANSPORT_TYPE = {
+	car: 'car',
+	harvester: 'harvester',
+	tractor: 'tractor',
+	// header: 'header',
+}
+
 canvas.height = innerHeight
 canvas.width = innerWidth

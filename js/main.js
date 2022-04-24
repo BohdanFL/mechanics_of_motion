@@ -72,9 +72,23 @@ addEventListener("resize", () => {
  * 	Tractors
  * 	Harvesters
  * 	Tippers 
- * 	Tools for harvesters
+ * 	Headrers
+ *  Map
+ *  Chargers
+ * 	Different seeds
+ *  Store
+ *  Withered field
+ *  Shops
  *  Add capacity for harvesters, fertilizer, sowing machine
- * 	Add fuel
+ *  Collide between machines and transports
+ *  Враховувати потужність тракторів, масу тракторів і прицеплених машин
+// // *  Controls panel(same as fs)
+ *  Мікроконтроль поворот руля
+ *  Create collide manager
+ */
+
+/** 
+ * Change binded side for harvester
  */
 
 /** Bugs
@@ -90,6 +104,8 @@ addEventListener("resize", () => {
  *  Ranging for maxSpeed, velocity, turnSpeed, stopVelocity and etc.
  */
 
+
+// // * 	Add fuel - done
 // // *  Відєднується machine, коли переключаєшся на інший transport - done
 // //  Switch between machines - done
 // // Переписати все на вектори - done

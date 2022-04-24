@@ -27,8 +27,8 @@ class Field {
 		this.x = x;
 		this.y = y;
 		this.gap = 0
-		this.unitWidth = canvas.width / this.partsX;
-		this.unitHeight = canvas.width / this.partsX;
+		this.unitWidth = innerWidth / this.partsX;
+		this.unitHeight = innerWidth / this.partsX;
 		this.width = this.x + (this.partsX) * this.unitWidth + (this.gap * (this.partsX))
 		this.height = this.y + (this.partsY) * this.unitHeight + (this.gap * (this.partsY))
 		this.color = "hsl(25, 50%, 20%)"
@@ -54,29 +54,25 @@ class Field {
 	updateUnitsCollide() {
 		this.unitsCollide = this.units.filter(unit => {
 			this.machines.forEach(machine => {
-				// if (machine instanceof Player) {
-				// 	if (sat(machine, unit)) {
-				// 		unit.grown = true
-				// 	}
-				// 	return
-				// }
-				if (sat(machine, unit) && machine.isConnected && !machine.activeTransport.disableMove) {
+				if (sat(machine, unit) && machine.isConnected && !machine.connectedTransport.disableMove) {
 					switch (machine.type) {
 						case 'sowing':
-							if (!unit.growingProgress) {
+							if (!unit.growingProgress && machine.capacity >= 0.2) {
 								unit.growingProgress = 33
+								machine.capacity -= 0.2
 							}
 							break;
-						case 'harvester':
-							if (unit.grown) {
+						case 'header':
+							if (unit.grown && (machine.connectedTransport.capacity < machine.connectedTransport.maxCapacity)) {
 								unit.harvested = true
 								unit.grown = false
 								unit.growingProgress = 0
 								if (unit.fertilized) {
-									game.money += 2
+									machine.connectedTransport.capacity += 2
 									return
 								}
-								game.money += 1
+								machine.connectedTransport.capacity += 1
+								// game.money += 1
 							}
 							break;
 						case 'cultivator':
@@ -91,18 +87,22 @@ class Field {
 							}
 							break;
 						case 'fertilizer':
-							if ((!unit.harvested || !unit.grown) && unit.growingProgress) {
+							if (!unit.fertilized && (!unit.harvested || !unit.grown) && unit.growingProgress && machine.capacity >= 0.2) {
 								unit.fertilized = true
+								machine.capacity -= 0.2
 								if (unit.growingProgress >= 33 && unit.growingProgress <= 66) {
 									unit.color = `hsl(95, 33%, ${unit.fertilized ? 20 : 30}%)`
 								} else {
 									unit.color = `hsl(95, 66%, ${unit.fertilized ? 20 : 30}%)`
 								}
 							}
-							if (!unit.growingProgress) {
+							if (!unit.fertilized && !unit.growingProgress && machine.capacity >= 0.2) {
 								unit.fertilized = true
+								machine.capacity -= 0.2
 								unit.color = "hsl(25, 50%, 10%)"
 							}
+							break;
+						case 'tipper':
 							break;
 						default:
 							throw new Error('Not exist type')

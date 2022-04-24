@@ -26,13 +26,16 @@
 		}
 
 		canvas {
+			position: absolute;
+			/* top: -100px; */
+			/* left: -100px; */
 			background-color: #2d2d2d;
 		}
 
 		#info {
 			position: absolute;
 			top: 20px;
-			left: 50%;
+			left: 80%;
 			color: white;
 			font-size: 1.2em;
 		}
@@ -84,8 +87,8 @@
 			</li>
 			<li class="settings__item">
 				Прискорення:
-				<input class="settings__range" id="velocity" value="0.12" min="0." max="1" step="0.01" type="range">
-				(<span id="velocity-value">0.12</span>)
+				<input class="settings__range" id="velocity" value="0.1" min="0." max="1" step="0.01" type="range">
+				(<span id="velocity-value">0.1</span>)
 			</li>
 			<li class="settings__item">
 				Крок повороту:
@@ -94,8 +97,8 @@
 			</li>
 			<li class="settings__item">
 				Зчеплення:
-				<input class="settings__range" id="friction" value="0.08" min="0" max="1" step="0.01" type="range">
-				(<span id="friction-value">0.08</span>)
+				<input class="settings__range" id="friction" value="0.07" min="0" max="1" step="0.01" type="range">
+				(<span id="friction-value">0.07</span>)
 			</li>
 		</ul>
 		<details class="settings-advanced">
@@ -103,15 +106,15 @@
 			<ul class="settings-advanced__list">
 				<li class="settings-advanced__item">
 					Тормозіння:
-					<input class="settings-advanced__range" id="braking" value="1.6" min="0" max="5" step="0.1"
+					<input class="settings-advanced__range" id="braking" value="2" min="0" max="5" step="0.1"
 						type="range">
-					(<span id="braking-value">1.6</span>)
+					(<span id="braking-value">2</span>)
 				</li>
 				<li class="settings-advanced__item">
 					Коефіцієнт задньої швидкості:
-					<input class="settings-advanced__range" id="max-speed-back-koef" value="0.5" min="0.1" max="3"
+					<input class="settings-advanced__range" id="max-speed-back-koef" value="0.3" min="0.1" max="3"
 						step="0.1" type="range">
-					(<span id="max-speed-back-koef-value">0.5</span>)
+					(<span id="max-speed-back-koef-value">0.3</span>)
 				</li>
 			</ul>
 		</details>
@@ -120,6 +123,9 @@
 	<script src="js/math.js"></script>
 	<script src="js/additional.js"></script>
 	<script src="js/core.js"></script>
+	<script src="js/transports/car.js"></script>
+	<script src="js/transports/harvester.js"></script>
+	<script src="js/transports/tractor.js"></script>
 	<script src="js/switcher.js"></script>
 	<script src="js/game.js"></script>
 	<script src="js/machines.js"></script>

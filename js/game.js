@@ -10,11 +10,41 @@ class Game {
 		this.fields.push(new Field(x, y, partsX, partsY, this.machines))
 	}
 
-	addTransport(x, y, width, height, angle, color) {
-		let transport = new Transport(x, y, width, height, angle, color)
+	addTransport(x, y, width, height, angle, color, type) {
+		let transport
+		switch (type) {
+			case 'harvester':
+				transport = new Harvester(x, y, width, height, angle, color)
+				break;
+			case 'tractor':
+				transport = new Tractor(x, y, width, height, angle, color)
+				break;
+			case 'car':
+				transport = new Car(x, y, width, height, angle, color)
+				break;
+			default:
+				throw new Error('Not exist type')
+				break;
+		}
 		this.transports.push(transport)
 		this.machines.forEach(machine => {
-			machine.addTransport(transport)
+			switch (type) {
+				case 'harvester':
+					if (machine.type === 'header') {
+						machine.addTransport(transport)
+					}
+					break;
+				case 'tractor':
+					if (machine.type !== 'tipper' && machine.type !== 'header') {
+						machine.addTransport(transport)
+					}
+					break;
+				case 'car':
+					if (machine.type === 'tipper') {
+						machine.addTransport(transport)
+					}
+					break;
+			}
 		})
 	}
 
@@ -22,16 +52,19 @@ class Game {
 		let machine
 		switch (type) {
 			case 'sowing':
-				machine = new SowingMachine(x, y, width, height, 0, this.transports)
+				machine = new SowingMachine(x, y, width, height, 0, this.transports.filter(t => t.type === 'tractor'))
 				break;
-			case 'harvester':
-				machine = new Harvester(x, y, width, height, 0, this.transports)
+			case 'header':
+				machine = new Header(x, y, width, height, 0, this.transports.filter(t => t.type === 'harvester'))
 				break;
 			case 'cultivator':
-				machine = new Cultivator(x, y, width, height, 0, this.transports)
+				machine = new Cultivator(x, y, width, height, 0, this.transports.filter(t => t.type === 'tractor'))
 				break;
 			case 'fertilizer':
-				machine = new Fertilizer(x, y, width, height, 0, this.transports)
+				machine = new Fertilizer(x, y, width, height, 0, this.transports.filter(t => t.type === 'tractor'))
+				break;
+			case 'tipper':
+				machine = new Tipper(x, y, width, height, 0, this.transports.filter(t => t.type === 'car'))
 				break;
 			default:
 				throw new Error('Not exist type')
@@ -39,28 +72,48 @@ class Game {
 		}
 		this.machines.push(machine)
 		this.fields.forEach(field => {
-			field.addMachine(machine)
+			if (type !== 'tipper') {
+				field.addMachine(machine)
+			}
 		})
 	}
 
 	start() {
+
 		addEventListener("keydown", startMove)
 		addEventListener("keyup", stopMove)
 
 		// create transport
-		for (let i = 1; i <= 4; i++) {
-			this.addTransport(80 * i, 300, 40, 80, 0, `hsl(${(360/4) * i}, 30%, 40%)`)
+		let transportWidth = 50
+		for (let i = 1; i <= 3; i++) {
+			this.addTransport((transportWidth*2) * i, 300, transportWidth, 80, 0, `hsl(${(360/5) * i}, 30%, 40%)`, 'tractor')
 		}
+
+		// create harvester
+		let harvester = new Harvester(transportWidth*2 * 4 + 35, 500, 80, 130, 0, `hsl(${(360/5) * 4}, 30%, 40%)`)
+		this.transports.push(harvester)
+
+		//create car
+		let car = new Car(600 + (15/2), 305, 45, 75, 0, `hsl(${(360/5) * 5}, 30%, 40%)`)
+		this.transports.push(car)
+
 		// enable switch between transports
 		const switcher = new Switcher(this.transports)
 		switcher.on()
 
 		// create machines
+		let machineWidth = 100
 		for (let i = 0; i <= 1; i++) {
-			let i2 = 1
+			let i2 = 0
 			for (const key in MACHINE_TYPE) {
-				this.addMachine((80 * i2 - 20), 400 + (i * 50), 80, 40, key)
 				i2++
+				if (key === 'header') {
+					this.addMachine(machineWidth * i2-25, 400 + (i * 50), machineWidth*2, 40, key)
+				} else if (key ==='tipper'){
+					this.addMachine((machineWidth * (i2+1) + i*120), 400, 60, 120, key)
+				} else {
+					this.addMachine(machineWidth * i2-25, 400 + (i * 50), machineWidth, 40, key)
+				}
 			}
 		}
 
@@ -73,28 +126,33 @@ class Game {
 		this.fields.forEach(field => field.draw())
 		this.machines.forEach(machine => machine.draw())
 		this.transports.forEach(transport => transport.draw())
-
 		this.showInfo()
 	}
 
 	showInfo() {
 		let activeTransport = this.transports.find(t => !t.disableMove)
-		const fuelText = `Fuel: ${Math.abs(activeTransport.fuel.toFixed())}`
-		const moneyText = `Money: ${this.money}`
-		ctx.font = '24px monospace'
-		const fuelTextInfo = ctx.measureText(fuelText)
-		const moneyTextInfo = ctx.measureText(moneyText)
-		ctx.fillStyle = activeTransport.color
-		ctx.fillText(fuelText, fuelTextInfo.width / 3, canvas.height - 20)
-		ctx.fillStyle = 'gold'
-		ctx.fillText(moneyText, fuelTextInfo.width / 3 + fuelTextInfo.width + moneyTextInfo.width / 3, canvas.height - 20)
+		let activeMachine = activeTransport.connectedMachine
 		$info.innerHTML = `
-			<span>${Math.abs(activeTransport.speed.toFixed(1))} km/h</span>
+			<span>${Math.abs(activeTransport.speed.toFixed(1))} km/h</span> <br>
+			<span>Money: ${this.money}</span> <br>
+			<span>Fuel: ${activeTransport.fuel.toFixed()}</span>
 		`
+		let procents, current
+		if (activeMachine && (activeMachine.type === 'sowing' || activeMachine.type === 'fertilizer')) {
+			current = activeMachine
+		} else if (activeTransport.type === 'harvester') {
+			current = activeTransport
+		} 
+
+		if (current) {
+			procents = (100 * current.capacity) / current.maxCapacity
+			$info.innerHTML += `<br><span>Capacity: ${procents.toFixed()} %</span>`
+		}
 	}
 
-	setPhysicsForTransport(physics) {
+	setPhysicsForTransport(physics, type = 'tractor') {
 		this.transports.forEach(t => {
+			if (t.type !== type)  return
 			if (physics.velocity!== undefined) {
 				t.velocity = physics.velocity
 			}
