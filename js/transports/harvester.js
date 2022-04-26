@@ -36,7 +36,6 @@ class Harvester extends Transport {
 		this.fuel = this.fuel*2.2
 		this.pipeWidth = 7
 		this.pipeHeight = 100
-		// this.tippers = []
 		this.pipe = new TransportPipe(this.x + 5, this.y + 5, this.pipeWidth, this.pipeHeight, this.angle, 'red')
 		this.pipe.opening = false
 		this.pipe.opened = false
@@ -44,33 +43,29 @@ class Harvester extends Transport {
 	}
 
 	draw() {
-		// (function() {
-			if (this.pipe.opening) {
-				if (this.pipe.angle < this.angle+90) {
-					this.pipe.angle++
-					this.pipe.opened = false
-				} else {
-					this.pipe.opened = true
-				}
-				if (this.pipe.opened) {
-					this.pipe.angle = this.angle + 90
-				}
-			} else if (this.pipe.opening !== null) {
-				if (this.pipe.angle <= this.angle) {
-					this.pipe.opening = null
-				} else {
-					this.pipe.angle--
-				}
+		if (this.pipe.opening) {
+			if (this.pipe.angle < this.angle+90) {
+				this.pipe.angle++
 				this.pipe.opened = false
+			} else {
+				this.pipe.opened = true
 			}
-		// }).bind(this)
-
-
+			if (this.pipe.opened) {
+				this.pipe.angle = this.angle + 90
+			}
+		} else if (this.pipe.opening !== null) {
+			console.log(this.pipe.angle <= this.angle)
+			if (this.pipe.angle > this.angle) {
+				this.pipe.angle--
+			} else {
+				this.pipe.opening = null
+			}
+			this.pipe.opened = false
+		}
 
 		if (!this.pipe.opened && ((this.pipe.opening === null)) ) {
 			this.pipe.angle = this.angle
 		}
-			// this.pipe.angle = this.angle
 
 		super.draw()
 		this.pipe.x = this.vertex[3].x 
@@ -80,30 +75,21 @@ class Harvester extends Transport {
 		this.hiddenCollider.y = this.vertex[3].y - this.pipeHeight*this.sin
 		this.hiddenCollider.angle = this.angle
 		
-
-		if (this.tippers.some(t => sat(t, this.hiddenCollider)) && this.capacity > 0) {
+		let currentTipper = this.tippers.find(t => sat(t, this.hiddenCollider))
+		if (currentTipper && this.capacity > 0) {
 			this.pipe.opening = true
 
 			if (this.pipe.opened) {
-				let currentTipper = this.tippers.find(t => sat(t, this.hiddenCollider))
 				this.capacity -= 4 
 				currentTipper.capacity += 4
-				console.log(this.capacity, currentTipper.capacity)
 			}
 		} else {
-			this.pipe.opening = false
+			if (this.pipe.opening !== null) {
+				this.pipe.opening = false
+			}
 		}
 
 		this.pipe.draw()
 		this.hiddenCollider.draw()
-		// if (!this.pipe.reverse) {
-		// 	if (this.pipe.angle >= this.angle+90) this.pipe.reverse = true
-		// 	this.pipe.angle++
-		// } else {
-		// 	if (this.pipe.angle <= this.angle+0) this.pipe.reverse = false
-		// 	this.pipe.angle--
-		// }
 	}
-
-	// transportPipe
 }
