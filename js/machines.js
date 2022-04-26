@@ -13,7 +13,6 @@ class Machine extends Box {
 		// Оптимізувати
 		window.addEventListener("keydown", (e) => {
 			if (e.code === 'Space' && !this.isConnected) {
-				console.log(this.transports)
 				this.transports.forEach(t => {
 					if (sat(t, this) && !t.disableMove) {
 						this.connectedTransport = t
@@ -54,7 +53,7 @@ class Machine extends Box {
 	draw() {
 		if (this.isConnected) {
 			this.speed = this.connectedTransport.speed
-			this.radian = this.connectedTransport.radian
+			this.angle = this.connectedTransport.angle
 			this.dir = this.connectedTransport.dir
 			this.setConnectedPos()
 		} else {
@@ -145,5 +144,7 @@ class Tipper extends Machine{
 	constructor(x, y, width, height, angle, transports) {
 		super(x, y, width, height, angle, transports, 'rgba(0, 255, 255, 1)')
 		this.type = 'tipper'
+		this.capacity = 0
+		this.maxCapacity = 8192
 	}
 }

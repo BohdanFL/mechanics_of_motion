@@ -37,6 +37,7 @@ class Box {
 	}
 
 	init() {
+		this.radian = this.angle * (Math.PI / 180)
 		this.cos = Math.cos(this.radian)
 		this.sin = Math.sin(this.radian)
 
@@ -91,6 +92,7 @@ class Transport extends Box {
 	}
 
 	draw() {
+
 		if (this.disableMove) {
 			this.color = this.tempColor
 		} else {
@@ -127,9 +129,6 @@ class Transport extends Box {
 				if (this.angle >= 360) this.angle = 0
 				this.angle += turnStep
 			}
-		}
-		if (this.isConnected) {
-
 		}
 		this.radian = this.angle * (Math.PI / 180)
 	}

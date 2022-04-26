@@ -116,7 +116,7 @@ class Game {
 				}
 			}
 		}
-
+		harvester.tippers = game.machines.filter(m => m.type ==='tipper')
 		// create field
 		this.addField(0, 0, 64, 16, this.machines)
 	}
@@ -138,7 +138,8 @@ class Game {
 			<span>Fuel: ${activeTransport.fuel.toFixed()}</span>
 		`
 		let procents, current
-		if (activeMachine && (activeMachine.type === 'sowing' || activeMachine.type === 'fertilizer')) {
+		if (activeMachine && (activeMachine.type === 'sowing' || activeMachine.type === 'fertilizer' || activeMachine.type === 'tipper')) {
+
 			current = activeMachine
 		} else if (activeTransport.type === 'harvester') {
 			current = activeTransport
