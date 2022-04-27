@@ -111,6 +111,7 @@ class Game {
 	}
 
 	start() {
+		// window.scrollTo({top: 0, left: 0})
 
 		addEventListener("keydown", startMove)
 		addEventListener("keyup", stopMove)
@@ -161,13 +162,16 @@ class Game {
 		let stationWidth = 60
 		for (const key in STATION_TYPE) {
 			let y = game.fields[0].units.findLast(t => t).y + game.fields[0].units.findLast(t => t).height
-			this.addStation(canvas.width-stationWidth, y + (stationWidth*2)*i3, 
+			this.addStation(innerWidth-stationWidth, y + (stationWidth*2)*i3, 
 			stationWidth, stationWidth, 0, 'rgb(100, 100, 100)', key)
 			i3++
 		}
 
 		//create sellers
-		this.addSellers(0, canvas.height-stationWidth*2, stationWidth, stationWidth)
+		this.addSellers(0, innerHeight-stationWidth*3, stationWidth, stationWidth)
+
+		// create minimap
+		this.minimap = new Minimap(10, innerHeight-10, 100, 100)
 	}
 
 	update() {
@@ -177,6 +181,7 @@ class Game {
 		this.transports.forEach(t => t.draw())
 		this.stations.forEach(s => s.draw())
 		this.sellers.forEach(s => s.draw())
+		this.minimap.draw()
 		this.showInfo()
 		this.globalCollide()
 	}
@@ -205,6 +210,11 @@ class Game {
 			}
 			$info.innerHTML += `<br><span>${seed}: ${procents.toFixed()} %</span>`
 		}
+		$info.style.top = scrollY + 20+'px'
+		$info.style.left = scrollX + (innerWidth*0.8)+'px'
+
+		$settings.style.top = scrollY +15+'px'
+		$settings.style.left = scrollX +10+'px'
 	}
 
 	setPhysicsForTransport(physics, type = 'tractor') {

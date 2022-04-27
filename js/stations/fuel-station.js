@@ -10,7 +10,7 @@ class FuelStation extends Station {
 		super.draw()
 
 		this.transports.forEach(t => {
-			if (sat(t, this) && game.money > 0 && t.maxFuel > t.fuel) {
+			if (sat(t, this) && game.money > 0 && t.maxFuel >= t.fuel) {
 				t.fuel++
 				game.money -= this.price
 			}

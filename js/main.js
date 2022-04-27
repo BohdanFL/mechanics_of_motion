@@ -75,11 +75,11 @@ rangeMaxSpeedBackKoef.addEventListener('input', e => {
  * 	Tippers - done
  * 	Headrers - done
  *  Add capacity for harvesters, fertilizer, sowing machine - done
+ *  Seller - done
+ *  Chargers - done
  *  Map
- *  Chargers
  * 	Different seeds (changing seeds)
  *  Toggle activation machines
- *  Store
  *  Global collision
  *  Withered field
  *  Shops
@@ -92,9 +92,10 @@ rangeMaxSpeedBackKoef.addEventListener('input', e => {
 
 /** 
  * Change binded side for harvester - done
+ *  Try optimize using SVG
  */
 
-/** Bugs
+/** Bugs 
  *  Коли fuel закінчився поворот при up або down не відбувається
  */
 

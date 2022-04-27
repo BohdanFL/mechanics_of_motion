@@ -52,5 +52,5 @@ const STATION_TYPE = {
 	fertilizer: 'fertilizer',
 }
 
-canvas.height = innerHeight
-canvas.width = innerWidth
+canvas.height = innerHeight*2
+canvas.width = innerWidth*2

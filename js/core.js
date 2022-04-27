@@ -213,26 +213,38 @@ class Transport extends Box {
 		}
 		this.move()
 		this.smoothStop()
-		// this.moveView()
+		this.moveView()
 	}
 
 	moveView() {
 		let yMax = Math.max(...this.vertex.map(v => v.y))
 		let yMin = Math.min(...this.vertex.map(v => v.y))
-		// console.clear()
-		// console.log(scrollY)
+		let xMax = Math.max(...this.vertex.map(v => v.x))
+		let xMin = Math.min(...this.vertex.map(v => v.x))
 		if (yMax > scrollY + innerHeight) {
 			window.scrollTo({
-				left: 0,
+				left: scrollX,
 				top: yMax - innerHeight
 			})
-			// this.y = yMax - innerHeight
 		} else if (yMin < scrollY) {
 			window.scrollTo({
-				left: 0,
+				left: scrollX,
 				top: yMin
 			})
-			// this.y = yMin
+		}
+
+		if (xMax > scrollX + innerWidth) {
+			window.scrollTo({
+				left: xMax - innerWidth,
+				top: scrollY
+			})
+		} else if (xMin < scrollX) {
+			window.scrollTo({
+				left: xMin,
+				top: scrollY
+			})
 		}
 	}
 }
+
+// Centered point of view on moving
