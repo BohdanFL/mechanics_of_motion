@@ -68,6 +68,10 @@ function getDirection(vertex) {
 	return dir
 }
 
+function capitalize(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function startMove(e) {
 	e.preventDefault();
 	if (keys.hasOwnProperty(e.code)) {

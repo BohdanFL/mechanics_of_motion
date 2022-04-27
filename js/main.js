@@ -9,6 +9,7 @@ const update = () => {
 
 	ctx.restore()
 	requestAnimationFrame(update)
+	// setTimeout(update, 1000/60)
 }
 requestAnimationFrame(update)
 
@@ -55,11 +56,11 @@ rangeMaxSpeedBackKoef.addEventListener('input', e => {
 	document.getElementById(rangeMaxSpeedBackKoef.id + '-value').textContent = rangeMaxSpeedBackKoef.value
 })
 
-addEventListener("resize", () => {
-	canvas.height = innerHeight
-	canvas.width = innerWidth
-	game.fields[0].resize()
-})
+// addEventListener("resize", () => {
+// 	canvas.height = innerHeight
+// 	canvas.width = innerWidth
+// 	game.fields[0].resize()
+// })
 
 
 
@@ -68,40 +69,41 @@ addEventListener("resize", () => {
 // }, 300);
 
 /** Main
- *  Cars
- * 	Tractors
- * 	Harvesters
- * 	Tippers 
- * 	Headrers
+ *  Cars - done
+ * 	Tractors - done
+ * 	Harvesters - done
+ * 	Tippers - done
+ * 	Headrers - done
+ *  Add capacity for harvesters, fertilizer, sowing machine - done
  *  Map
  *  Chargers
- * 	Different seeds
+ * 	Different seeds (changing seeds)
+ *  Toggle activation machines
  *  Store
+ *  Global collision
  *  Withered field
  *  Shops
- *  Add capacity for harvesters, fertilizer, sowing machine
  *  Collide between machines and transports
- *  Враховувати потужність тракторів, масу тракторів і прицеплених машин
+ *  Calculate power of tractors, mass of tractos and attached machines
 // // *  Controls panel(same as fs)
- *  Мікроконтроль поворот руля
+ *  Microcontrol steering wheel turn
  *  Create collide manager
  */
 
 /** 
- * Change binded side for harvester
+ * Change binded side for harvester - done
  */
 
 /** Bugs
- *  Взяття двох machines одночасно
  *  Коли fuel закінчився поворот при up або down не відбувається
  */
 
 
 /** Additional
- *  Зробити безкінечне поле для їзди
  *  Намалювати нормальну машину(з колесами, з передом і задом)
+ *  Добавити картинки для машин, полів і т.д
  *  Обмеження по переміщенню
- *  Ranging for maxSpeed, velocity, turnSpeed, stopVelocity and etc.
+ *  Settings physics for transports - done
  */
 
 

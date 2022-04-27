@@ -6,5 +6,7 @@ class Car extends Transport {
 		this.velocity = this.velocity*1.2
 		this.maxSpeedBackKoef = this.maxSpeedBackKoef * 1.5
 		this.maxSpeedBack = this.maxSpeed * this.maxSpeedBackKoef
+		this.fuel = 60
+		this.maxFuel = 60-1
 	}
 }

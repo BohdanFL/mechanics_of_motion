@@ -35,7 +35,21 @@ const TRANSPORT_TYPE = {
 	car: 'car',
 	harvester: 'harvester',
 	tractor: 'tractor',
-	// header: 'header',
+}
+
+const SEED_TYPE = {
+	wheat: 'wheat',
+	canola: 'canola',
+	corn: 'corn',
+	sunflower: 'sunflower',
+	potato: 'potato',
+	sugarbeet: 'sugarbeet'
+}
+
+const STATION_TYPE = {
+	fuel: 'fuel',
+	seed: 'seed',
+	fertilizer: 'fertilizer',
 }
 
 canvas.height = innerHeight

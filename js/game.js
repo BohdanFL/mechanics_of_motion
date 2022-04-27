@@ -1,13 +1,17 @@
 class Game {
-	constructor(fields = [], machines = [], transports = []) {
+	constructor(fields = [], machines = [], transports = [], stations = [], sellers = []) {
 		this.fields = fields
 		this.machines = machines
 		this.transports = transports
-		this.money = 0
+		this.stations = stations
+		this.sellers = sellers
+		this.activeTransport = null
+		this.activeMachine = null
+		this.money = 3000
 	}
 
-	addField(x, y, partsX, partsY) {
-		this.fields.push(new Field(x, y, partsX, partsY, this.machines))
+	addField(x, y, partsX, partsY, machines) {
+		this.fields.push(new Field(x, y, partsX, partsY, machines))
 	}
 
 	addTransport(x, y, width, height, angle, color, type) {
@@ -78,23 +82,53 @@ class Game {
 		})
 	}
 
+	addStation(x, y, width, height, angle, color, type) {
+		let station 
+		switch (type) {
+			case STATION_TYPE.fuel:
+				station = new FuelStation(x, y, width, height, angle, color)
+				station.transports = this.transports
+				break;
+			case STATION_TYPE.seed:
+				station = new SeedStation(x, y, width, height, angle, color)
+				station.sowings = this.machines.filter(m => m.type === MACHINE_TYPE.sowing)
+				break;
+			case STATION_TYPE.fertilizer:
+				station = new FertilizerStation(x, y, width, height, angle, color)
+				station.fertilizers = this.machines.filter(m => m.type === MACHINE_TYPE.fertilizer)
+				break;
+			default:
+				throw new Error('Not exist type')
+				break;
+		}
+		this.stations.push(station)
+	}
+
+	addSellers(x, y, width, height, angle, color) {
+		let seller = new Seller(x, y, width, height, angle, color)
+		seller.tippers = this.machines.filter(m => m.type === MACHINE_TYPE.tipper)
+		this.sellers.push(seller)
+	}
+
 	start() {
 
 		addEventListener("keydown", startMove)
 		addEventListener("keyup", stopMove)
 
 		// create transport
-		let transportWidth = 50
+		let transportWidth = 40
 		for (let i = 1; i <= 3; i++) {
-			this.addTransport((transportWidth*2) * i, 300, transportWidth, 80, 0, `hsl(${(360/5) * i}, 30%, 40%)`, 'tractor')
+			this.addTransport((transportWidth*2) * i, 300, transportWidth, transportWidth*1.6, 0, `hsl(${(360/5) * i}, 30%, 40%)`, 'tractor')
 		}
 
-		// create harvester
-		let harvester = new Harvester(transportWidth*2 * 4 + 35, 500, 80, 130, 0, `hsl(${(360/5) * 4}, 30%, 40%)`)
+		// create harvester'
+		let harvesterWidth = transportWidth*1.6
+		let harvester = new Harvester(transportWidth*2 * 4 + 35, 500, harvesterWidth, harvesterWidth*1.6, 0, `hsl(${(360/5) * 4}, 30%, 40%)`)
 		this.transports.push(harvester)
 
 		//create car
-		let car = new Car(600 + (15/2), 305, 45, 75, 0, `hsl(${(360/5) * 5}, 30%, 40%)`)
+		let carWidth = transportWidth * 0.9
+		let car = new Car(600 + (15/2), 305, carWidth, carWidth*1.6, 0, `hsl(${(360/5) * 5}, 30%, 40%)`)
 		this.transports.push(car)
 
 		// enable switch between transports
@@ -102,52 +136,74 @@ class Game {
 		switcher.on()
 
 		// create machines
-		let machineWidth = 100
+		let machineWidth = transportWidth*2
 		for (let i = 0; i <= 1; i++) {
 			let i2 = 0
 			for (const key in MACHINE_TYPE) {
 				i2++
 				if (key === 'header') {
-					this.addMachine(machineWidth * i2-25, 400 + (i * 50), machineWidth*2, 40, key)
+					this.addMachine(machineWidth * i2-25, 400 + (i * 50), machineWidth*2, machineWidth*0.4, key)
 				} else if (key ==='tipper'){
-					this.addMachine((machineWidth * (i2+1) + i*120), 400, 60, 120, key)
+					this.addMachine((machineWidth * (i2+1) + i*120), 400, machineWidth* 0.6, machineWidth*1.2, key)
 				} else {
-					this.addMachine(machineWidth * i2-25, 400 + (i * 50), machineWidth, 40, key)
+					this.addMachine(machineWidth * i2-25, 400 + (i * 50), machineWidth, machineWidth*0.4, key)
 				}
 			}
 		}
 		harvester.tippers = game.machines.filter(m => m.type ==='tipper')
 		// create field
-		this.addField(0, 0, 64, 16, this.machines)
+		for	(let i = 0; i < 4; i++) {
+			this.addField(15 + (16*10)*i + (60*i), 30, 16, 32, this.machines)
+		}
+
+		// create stations 
+		let i3 = 0
+		let stationWidth = 60
+		for (const key in STATION_TYPE) {
+			let y = game.fields[0].units.findLast(t => t).y + game.fields[0].units.findLast(t => t).height
+			this.addStation(canvas.width-stationWidth, y + (stationWidth*2)*i3, 
+			stationWidth, stationWidth, 0, 'rgb(100, 100, 100)', key)
+			i3++
+		}
+
+		//create sellers
+		this.addSellers(0, canvas.height-stationWidth*2, stationWidth, stationWidth)
 	}
 
 	update() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
-		this.fields.forEach(field => field.draw())
-		this.machines.forEach(machine => machine.draw())
-		this.transports.forEach(transport => transport.draw())
+		this.fields.forEach(f => f.draw())
+		this.machines.forEach(m => m.draw())
+		this.transports.forEach(t => t.draw())
+		this.stations.forEach(s => s.draw())
+		this.sellers.forEach(s => s.draw())
 		this.showInfo()
+		this.globalCollide()
 	}
 
 	showInfo() {
-		let activeTransport = this.transports.find(t => !t.disableMove)
-		let activeMachine = activeTransport.connectedMachine
+		this.activeTransport = this.transports.find(t => !t.disableMove)
+		this.activeMachine = this.activeTransport.connectedMachine
 		$info.innerHTML = `
-			<span>${Math.abs(activeTransport.speed.toFixed(1))} km/h</span> <br>
+			<span>${Math.abs(this.activeTransport.speed.toFixed(1))} km/h</span> <br>
 			<span>Money: ${this.money}</span> <br>
-			<span>Fuel: ${activeTransport.fuel.toFixed()}</span>
+			<span>Fuel: ${this.activeTransport.fuel.toFixed()}</span>
 		`
-		let procents, current
-		if (activeMachine && (activeMachine.type === 'sowing' || activeMachine.type === 'fertilizer' || activeMachine.type === 'tipper')) {
+		let procents, current, seed
+		if (this.activeMachine && this.activeMachine.hasOwnProperty('capacity')) {
+			current = this.activeMachine
+		} else if (this.activeTransport.hasOwnProperty('capacity')) {
+			current = this.activeTransport
+		}
 
-			current = activeMachine
-		} else if (activeTransport.type === 'harvester') {
-			current = activeTransport
-		} 
-
-		if (current) {
+		if (current && current.capacity > 0) {
 			procents = (100 * current.capacity) / current.maxCapacity
-			$info.innerHTML += `<br><span>Capacity: ${procents.toFixed()} %</span>`
+			if (current.hasOwnProperty('seedType') && current.seedType) {
+				seed = capitalize(current.seedType)
+			} else {
+				seed = 'Capacity'
+			}
+			$info.innerHTML += `<br><span>${seed}: ${procents.toFixed()} %</span>`
 		}
 	}
 
@@ -175,5 +231,16 @@ class Game {
 				t.maxSpeedBack = t.maxSpeed * t.maxSpeedBackKoef
 			}
 		})
+	}
+
+	globalCollide() {
+		// this.machines.forEach(machine => {
+		// 	this.transports.forEach(transport => {
+		// 		if (sat(machine, transport)) {
+
+		// 			// transport.speed = -transport.speed
+		// 		}
+		// 	})
+		// })
 	}
 }

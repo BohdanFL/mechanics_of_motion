@@ -11,6 +11,7 @@ class FieldUnit {
 		this.grown = false
 		this.growingProgress = 0
 		this.harvested = false
+		this.seedType = null
 
 		this.color = `hsl(95, ${this.growingProgress}%, 30%)`
 		this.vertex = []
@@ -27,10 +28,10 @@ class Field {
 		this.x = x;
 		this.y = y;
 		this.gap = 0
-		this.unitWidth = innerWidth / this.partsX;
-		this.unitHeight = innerWidth / this.partsX;
-		this.width = this.x + (this.partsX) * this.unitWidth + (this.gap * (this.partsX))
-		this.height = this.y + (this.partsY) * this.unitHeight + (this.gap * (this.partsY))
+		this.unitWidth = 10;
+		this.unitHeight = 10;
+		this.width = (this.partsX) * this.unitWidth + (this.gap * (this.partsX))
+		this.height = (this.partsY) * this.unitHeight + (this.gap * (this.partsY))
 		this.color = "hsl(25, 50%, 20%)"
 		this.machines = machines
 		this.units = [];
@@ -60,6 +61,7 @@ class Field {
 							if (!unit.growingProgress && machine.capacity >= 0.2) {
 								unit.growingProgress = 33
 								machine.capacity -= 0.2
+								unit.seedType = machine.seedType
 							}
 							break;
 						case 'header':
@@ -67,12 +69,13 @@ class Field {
 								unit.harvested = true
 								unit.grown = false
 								unit.growingProgress = 0
+								console.log(unit.seedType)
+								machine.connectedTransport.seedType = unit.seedType
 								if (unit.fertilized) {
 									machine.connectedTransport.capacity += 2
 									return
 								}
 								machine.connectedTransport.capacity += 1
-								// game.money += 1
 							}
 							break;
 						case 'cultivator':
@@ -122,21 +125,22 @@ class Field {
 
 	draw() {
 		this.drawField()
-
 		this.updateUnitsCollide()
+		this.updateStateUnits()
+	}
 
+	updateStateUnits() {
 		this.unitsCollide.forEach(unit => {
 			if (unit.growingProgress <= 100 && unit.growingProgress !== 0 && !unit.grown) {
 				if ((unit.growingProgress / 33 === 1) || (unit.growingProgress / 33 === 2)) {
 					unit.color = `hsl(95, ${unit.growingProgress}%, ${unit.fertilized ? 20 : 30}%)`
 				}
-				unit.growingProgress += 1 / 8
+				unit.growingProgress += 2**-2
 			}
 			if (unit.growingProgress >= 100) {
 				unit.grown = true
 			}
 			if (unit.grown) {
-
 				unit.color = 'hsl(50, 70%, 30%)'
 			}
 			if (unit.harvested) {
@@ -145,8 +149,10 @@ class Field {
 				}
 				unit.color = 'hsl(50, 30%, 50%)'
 			}
-
+			// console.log(ctx.fillStyle, unit.color)
+			// if (ctx.fillStyle !== unit.color)
 			ctx.fillStyle = unit.color
+			// console.log(ctx.fillStyle)
 			ctx.fillRect(unit.vertex[3].x, unit.vertex[3].y, this.unitWidth, this.unitHeight)
 		})
 	}
@@ -169,4 +175,4 @@ class Field {
 	}
 }
 
-// TODO: Refactor Field.draw function
+// TODO: Refactor Field.draw function - done

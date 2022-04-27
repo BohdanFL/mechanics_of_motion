@@ -75,6 +75,7 @@ class Transport extends Box {
 		this.braking = physics.braking ?? 2
 		this.fuel = 160
 		this.fuelConsumption = 1 / 512
+		this.maxFuel = this.fuel
 		this.refDir = this.dir
 		this.disableMove = true
 		this.connectedMachine = null

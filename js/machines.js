@@ -82,6 +82,7 @@ class SowingMachine extends Machine {
 		this.type = 'sowing'
 		this.maxCapacity = 3000
 		this.capacity = this.maxCapacity
+		this.seedType = SEED_TYPE.wheat
 	}
 }
 
@@ -129,11 +130,11 @@ class Header extends Machine {
 	}
 
 	setConnectedPos() {
-		this.movingX = this.connectedTransport.height * this.sin
-		this.movingY = this.connectedTransport.height * this.cos
+		// this.movingX = this.connectedTransport.height * this.sin
+		// this.movingY = this.connectedTransport.height * this.cos
 
 		this.x = this.connectedTransport.x + this.connectedTransport.halfWidth - this.halfWidth
-		this.y = this.connectedTransport.y + this.connectedTransport.height - this.height
+		this.y = this.connectedTransport.y - this.height
 
 		this.x += this.speedTurnX
 		this.y -= this.speedTurnY
@@ -144,7 +145,8 @@ class Tipper extends Machine{
 	constructor(x, y, width, height, angle, transports) {
 		super(x, y, width, height, angle, transports, 'rgba(0, 255, 255, 1)')
 		this.type = 'tipper'
-		this.capacity = 0
+		this.seedType = null
+		this.capacity = 8192/16
 		this.maxCapacity = 8192
 	}
 }
