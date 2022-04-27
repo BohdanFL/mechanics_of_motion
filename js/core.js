@@ -221,29 +221,34 @@ class Transport extends Box {
 		let yMin = Math.min(...this.vertex.map(v => v.y))
 		let xMax = Math.max(...this.vertex.map(v => v.x))
 		let xMin = Math.min(...this.vertex.map(v => v.x))
-		if (yMax > scrollY + innerHeight) {
-			window.scrollTo({
-				left: scrollX,
-				top: yMax - innerHeight
-			})
-		} else if (yMin < scrollY) {
-			window.scrollTo({
-				left: scrollX,
-				top: yMin
-			})
-		}
+		let centerY = (yMax+yMin)/2
+		let centerX = (xMax+xMin)/2
 
-		if (xMax > scrollX + innerWidth) {
+		// if (yMax + innerHeight/2> scrollY + innerHeight) {
+		// 	window.scrollTo({
+		// 		left: scrollX,
+		// 		top: yMax + innerHeight/2
+		// 	})
+		// } else if (yMin - innerHeight/2 < scrollY) {
 			window.scrollTo({
-				left: xMax - innerWidth,
-				top: scrollY
+				left: centerX - innerWidth/2,
+				top: centerY - innerHeight/2
 			})
-		} else if (xMin < scrollX) {
-			window.scrollTo({
-				left: xMin,
-				top: scrollY
-			})
-		}
+		// }
+
+		// if (yMax + innerHeight/2 )
+
+		// if (xMax > scrollX + innerWidth) {
+		// 	window.scrollTo({
+		// 		left: xMax - innerWidth,
+		// 		top: scrollY
+		// 	})
+		// } else if (xMin < scrollX) {
+		// 	window.scrollTo({
+		// 		left: xMin,
+		// 		top: scrollY
+		// 	})
+		// }
 	}
 }
 

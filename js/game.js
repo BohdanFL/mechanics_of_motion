@@ -171,7 +171,7 @@ class Game {
 		this.addSellers(0, innerHeight-stationWidth*3, stationWidth, stationWidth)
 
 		// create minimap
-		this.minimap = new Minimap(10, innerHeight-10, 100, 100)
+		this.minimap = new Minimap(10, innerHeight-10, 10)
 	}
 
 	update() {
