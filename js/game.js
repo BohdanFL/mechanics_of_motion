@@ -8,6 +8,9 @@ class Game {
 		this.activeTransport = null
 		this.activeMachine = null
 		this.money = 3000
+		this.x = canvas.width/2 - innerWidth/2
+		this.y = canvas.height/2 - innerHeight/2
+		this.zoom = 1
 	}
 
 	addField(x, y, partsX, partsY, machines) {
@@ -111,25 +114,27 @@ class Game {
 	}
 
 	start() {
-		// window.scrollTo({top: 0, left: 0})
-
+		this.image = new Image()
+		this.image.src = 'bg-2-min.jpg'
+		window.scrollTo({top: this.x, left: this.y})
+		// ctx.scale(this.zoom, this.zoom)
 		addEventListener("keydown", startMove)
 		addEventListener("keyup", stopMove)
 
 		// create transport
-		let transportWidth = 40
+		let transportWidth = 18
 		for (let i = 1; i <= 3; i++) {
-			this.addTransport((transportWidth*2) * i, 300, transportWidth, transportWidth*1.6, 0, `hsl(${(360/5) * i}, 30%, 40%)`, 'tractor')
+			this.addTransport(this.x + (transportWidth*2) * i, this.y + 350, transportWidth, transportWidth*1.6, 0, `hsl(${(360/5) * i}, 30%, 40%)`, 'tractor')
 		}
 
 		// create harvester'
-		let harvesterWidth = transportWidth*1.6
-		let harvester = new Harvester(transportWidth*2 * 4 + 35, 500, harvesterWidth, harvesterWidth*1.6, 0, `hsl(${(360/5) * 4}, 30%, 40%)`)
+		let harvesterWidth = transportWidth*2
+		let harvester = new Harvester(this.x + transportWidth*2 * 4 + 35,this.y + 500, harvesterWidth, harvesterWidth*1.6, 0, `hsl(${(360/5) * 4}, 30%, 40%)`)
 		this.transports.push(harvester)
 
 		//create car
 		let carWidth = transportWidth * 0.9
-		let car = new Car(600 + (15/2), 305, carWidth, carWidth*1.6, 0, `hsl(${(360/5) * 5}, 30%, 40%)`)
+		let car = new Car(this.x + 600 + (15/2), this.y +305, carWidth, carWidth*1.8, 0, `hsl(${(360/5) * 5}, 30%, 40%)`)
 		this.transports.push(car)
 
 		// enable switch between transports
@@ -137,24 +142,26 @@ class Game {
 		switcher.on()
 
 		// create machines
-		let machineWidth = transportWidth*2
-		for (let i = 0; i <= 1; i++) {
+		let machineWidth = transportWidth*1.2
 			let i2 = 0
 			for (const key in MACHINE_TYPE) {
 				i2++
 				if (key === 'header') {
-					this.addMachine(machineWidth * i2-25, 400 + (i * 50), machineWidth*2, machineWidth*0.4, key)
+					this.addMachine(this.x + machineWidth * i2-25, this.y + 400 + 50, machineWidth*2, machineWidth*0.4, key)
 				} else if (key ==='tipper'){
-					this.addMachine((machineWidth * (i2+1) + i*120), 400, machineWidth* 0.6, machineWidth*1.2, key)
+					this.addMachine(this.x + (machineWidth * (i2+1) + 120), this.y + 400, machineWidth* 0.6, machineWidth*1.2, key)
 				} else {
-					this.addMachine(machineWidth * i2-25, 400 + (i * 50), machineWidth, machineWidth*0.4, key)
+					this.addMachine(this.x + machineWidth * i2-25, this.y + 400 + 50, machineWidth, machineWidth*1.2, key)
 				}
 			}
-		}
 		harvester.tippers = game.machines.filter(m => m.type ==='tipper')
 		// create field
-		for	(let i = 0; i < 4; i++) {
-			this.addField(15 + (16*10)*i + (60*i), 30, 16, 32, this.machines)
+		// for	(let i = 0; i < 4; i++) {
+		// 	this.addField(this.x + 15 + (16*20)*i + (60*i), this.y + 30, 16, 32, this.machines)
+		// }
+		for (let i = 0; i < fieldsPosition.length; i++) {
+			const field = fieldsPosition[i];
+			this.addField(field.x, field.y, field.partsX, field.partsY, this.machines)
 		}
 
 		// create stations 
@@ -162,32 +169,39 @@ class Game {
 		let stationWidth = 60
 		for (const key in STATION_TYPE) {
 			let y = game.fields[0].units.findLast(t => t).y + game.fields[0].units.findLast(t => t).height
-			this.addStation(innerWidth-stationWidth, y + (stationWidth*2)*i3, 
+			this.addStation(this.x + innerWidth-stationWidth, this.y + y + (stationWidth*2)*i3, 
 			stationWidth, stationWidth, 0, 'rgb(100, 100, 100)', key)
 			i3++
 		}
 
 		//create sellers
-		this.addSellers(0, innerHeight-stationWidth*3, stationWidth, stationWidth)
-
+		this.addSellers(this.x, this.y+innerHeight-stationWidth*3, stationWidth, stationWidth)
 		// create minimap
-		this.minimap = new Minimap(10, innerHeight-10, 10)
+		this.minimap = new Minimap(10, innerHeight-10, 36, 'black', this)
+		window.vertex = []
 	}
 
 	update() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+		setWindowVectors(window)
+		window.dir = getDirection(window.vertex)
+
+		this.activeTransport = this.transports.find(t => !t.disableMove)
+		// ctx.drawImage(this.image, 0, 0, canvas.width, canvas.height)
 		this.fields.forEach(f => f.draw())
 		this.machines.forEach(m => m.draw())
-		this.transports.forEach(t => t.draw())
+		this.transports.forEach(t => {if (t.disableMove) t.draw()})
 		this.stations.forEach(s => s.draw())
 		this.sellers.forEach(s => s.draw())
+		// ctx.setTransform(1, 0, 0, 1, 0, 0);
+		this.activeTransport.draw()
 		this.minimap.draw()
 		this.showInfo()
 		this.globalCollide()
 	}
 
 	showInfo() {
-		this.activeTransport = this.transports.find(t => !t.disableMove)
 		this.activeMachine = this.activeTransport.connectedMachine
 		$info.innerHTML = `
 			<span>${Math.abs(this.activeTransport.speed.toFixed(1))} km/h</span> <br>

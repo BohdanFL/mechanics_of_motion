@@ -132,7 +132,6 @@ class Header extends Machine {
 	setConnectedPos() {
 		// this.movingX = this.connectedTransport.height * this.sin
 		// this.movingY = this.connectedTransport.height * this.cos
-
 		this.x = this.connectedTransport.x + this.connectedTransport.halfWidth - this.halfWidth
 		this.y = this.connectedTransport.y - this.height
 

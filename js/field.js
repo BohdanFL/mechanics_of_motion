@@ -16,7 +16,7 @@ class FieldUnit {
 		this.color = `hsl(95, ${this.growingProgress}%, 30%)`
 		this.vertex = []
 
-		setVectorsForFieldUnit(this)
+		setSquareVectors(this)
 		this.dir = getDirection(this.vertex)
 	}
 }
@@ -28,8 +28,8 @@ class Field {
 		this.x = x;
 		this.y = y;
 		this.gap = 0
-		this.unitWidth = 10;
-		this.unitHeight = 10;
+		this.unitWidth = 20;
+		this.unitHeight = 20;
 		this.width = (this.partsX) * this.unitWidth + (this.gap * (this.partsX))
 		this.height = (this.partsY) * this.unitHeight + (this.gap * (this.partsY))
 		this.color = "hsl(25, 50%, 20%)"
@@ -37,6 +37,7 @@ class Field {
 		this.units = [];
 		this.unitsCollide = []
 		this.init();
+		this.angle = 0
 	}
 
 	resize() {

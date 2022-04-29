@@ -55,11 +55,37 @@ function projShapeOntoAxis(axis, obj) {
 	}
 }
 
-function setVectorsForFieldUnit(unit) {
-	unit.vertex[0] = new Vector(unit.x, unit.y + unit.height)
-	unit.vertex[1] = new Vector(unit.x + unit.width, unit.y + unit.height)
-	unit.vertex[2] = new Vector(unit.x + unit.width, unit.y)
-	unit.vertex[3] = new Vector(unit.x, unit.y)
+function setSquareVectors(square) {
+	square.vertex[0] = new Vector(square.x, square.y + square.height)
+	square.vertex[1] = new Vector(square.x + square.width, square.y + square.height)
+	square.vertex[2] = new Vector(square.x + square.width, square.y)
+	square.vertex[3] = new Vector(square.x, square.y)
+}
+
+function setWindowVectors(window) {
+	window.vertex[0] = new Vector(window.scrollX, window.scrollY + window.innerHeight)
+	window.vertex[1] = new Vector(window.scrollX + window.innerWidth, window.scrollY + window.innerHeight)
+	window.vertex[2] = new Vector(window.scrollX + window.innerWidth, window.scrollY)
+	window.vertex[3] = new Vector(window.scrollX, window.scrollY)
+}
+
+function setVectorsBindedBottom() {
+	this.vertex[0] = new Vector(
+		(this.x + (this.halfWidth - this.a)),
+		(this.y - this.b)
+	)
+	this.vertex[1] = new Vector(
+		(this.x + (this.halfWidth + this.a)),
+		(this.y + this.b)
+	)
+	this.vertex[2] = new Vector(
+		this.vertex[1].x - this.d,
+		this.vertex[1].y + this.c
+	)
+	this.vertex[3] = new Vector(
+		this.vertex[0].x - this.d,
+		this.vertex[0].y + this.c
+	)
 }
 
 function getDirection(vertex) {
@@ -85,3 +111,14 @@ function stopMove(e) {
 		keys[e.code] = false;
 	}
 }
+const toggleControls = document.getElementById('toggle-controls')
+function toggleShowButton(e) {
+	buttons.classList.toggle('hide')
+}
+
+function initMoveBtn(btn, keyCode) {
+	btn.addEventListener("touchstart", (e) => (keys[keyCode] = true), {passive: true});
+	btn.addEventListener("touchend", (e) => (keys[keyCode] = false), {passive: true});
+}
+
+toggleControls.addEventListener('click', toggleShowButton)

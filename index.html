@@ -28,6 +28,8 @@
 		canvas {
 			position: absolute;
 			background-color: #2d2d2d;
+			background-image: url('bg-2-min.jpg');
+			/* object-fit: cover; */
 		}
 
 		#info {
@@ -43,6 +45,7 @@
 			position: absolute;
 			color: white;
 			font-size: 1rem;
+			white-space: nowrap;
 		}
 
 		.settings__title,
@@ -53,6 +56,43 @@
 		.settings-advanced {
 			margin-left: 10px;
 		}
+
+		.hide {
+			display: none;
+			user-select: none;
+			pointer-events: none;
+			width: 1px;height: 1px;
+			top: 0; left: 0;
+			opacity: 0;
+		}
+
+		#buttons {
+			display: flex;
+			position: fixed;
+			top: 100%;
+			left: 50%;
+			transform: translate(-50%, -110%);
+		}
+		#buttons__wrapper {
+			display: flex;
+			flex-wrap: wrap;
+		}
+		#buttons__wrapper button {
+			flex: 100% 0;
+		}
+
+		#buttons button {
+			text-transform: uppercase;
+			background-color: #f0f0f0;
+			text-align: center;
+			border: 2px solid;
+			padding: 20px 30px;
+		}
+
+		button:active {
+			box-shadow: inset 0px 0px 10px 2px;
+		}
+
 	</style>
 </head>
 
@@ -97,6 +137,10 @@
 				<input class="settings__range" id="friction" value="0.07" min="0" max="1" step="0.01" type="range">
 				(<span id="friction-value">0.07</span>)
 			</li>
+			<li class="settings__item">
+				Кнопки для тф:
+				<input class="settings__range" id="toggle-controls" type="checkbox">
+			</li>
 		</ul>
 		<details class="settings-advanced">
 			<summary class="settings-advanced__title">Продвинуті налаштування</summary>
@@ -116,6 +160,15 @@
 			</ul>
 		</details>
 	</details>
+	<div id="buttons" class="hide">
+		<button id="left">Left</button>
+		<div id="buttons__wrapper">
+		  <button id="up">Up</button>
+		  <button id="down">Down</button>
+		</div>
+		<button id="right">Right</button>
+	</div>
+
 	<script src="js/vars.js"></script>
 	<script src="js/math.js"></script>
 	<script src="js/additional.js"></script>
@@ -134,9 +187,14 @@
 	<script src="js/switcher.js"></script>
 	<script src="js/game.js"></script>
 	<script src="js/machines.js"></script>
-	<script src="js/player.js"></script>
 	<script src="js/field.js"></script>
+	<script>
+		console.time()
+	</script>
 	<script src="js/main.js"></script>
+	<script>
+		console.timeEnd()
+	</script>
 	<!-- <script src="sat.js"></script> -->
 </body>
 

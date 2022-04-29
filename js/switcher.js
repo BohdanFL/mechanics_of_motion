@@ -29,6 +29,18 @@ class Switcher {
 			}
 			this.transports[this.activeIndex].onListeners()
 		}
+
+		let yMax = Math.max(...this.transports[this.activeIndex].vertex.map(v => v.y))
+		let yMin = Math.min(...this.transports[this.activeIndex].vertex.map(v => v.y))
+		let xMax = Math.max(...this.transports[this.activeIndex].vertex.map(v => v.x))
+		let xMin = Math.min(...this.transports[this.activeIndex].vertex.map(v => v.x))
+		let centerY = (yMax+yMin)/2
+		let centerX = (xMax+xMin)/2
+
+		window.scrollTo({
+			left: centerX - innerWidth/2,
+			top: centerY - innerHeight/2
+		})
 	}
 
 	on() {

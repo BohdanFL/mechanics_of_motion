@@ -15,6 +15,8 @@ class Box {
 		this.vertex = []
 		this.init()
 		this.dir = getDirection(this.vertex)
+		this.texture = new Image()
+		this.texture.src = 'tractor.png'
 	}
 
 	setVectors() {
@@ -54,11 +56,21 @@ class Box {
 
 	draw() {
 		this.init()
-		ctx.fillStyle = this.color;
-		ctx.beginPath();
-		ctx.moveTo(this.vertex[3].x, this.vertex[3].y);
-		this.vertex.forEach(point => ctx.lineTo(point.x, point.y))
-		ctx.fill();
+		if (sat(this, window)) {
+			if (this.hasOwnProperty('type') && this.type === 'tractor') {
+				ctx.translate(this.x + this.width/2, this.y + this.height)
+				ctx.rotate(this.radian)
+				ctx.drawImage(this.texture, -this.width/2, -this.height, this.width, this.height)
+				ctx.setTransform(1,0,0,1,0,0);
+				return
+			}
+			ctx.fillStyle = this.color;
+			ctx.beginPath();
+			ctx.moveTo(this.vertex[3].x, this.vertex[3].y);
+			this.vertex.forEach(point => ctx.lineTo(point.x, point.y))
+			ctx.fill();
+
+		}
 	}
 }
 
@@ -224,32 +236,11 @@ class Transport extends Box {
 		let centerY = (yMax+yMin)/2
 		let centerX = (xMax+xMin)/2
 
-		// if (yMax + innerHeight/2> scrollY + innerHeight) {
-		// 	window.scrollTo({
-		// 		left: scrollX,
-		// 		top: yMax + innerHeight/2
-		// 	})
-		// } else if (yMin - innerHeight/2 < scrollY) {
-			window.scrollTo({
-				left: centerX - innerWidth/2,
-				top: centerY - innerHeight/2
-			})
-		// }
-
-		// if (yMax + innerHeight/2 )
-
-		// if (xMax > scrollX + innerWidth) {
-		// 	window.scrollTo({
-		// 		left: xMax - innerWidth,
-		// 		top: scrollY
-		// 	})
-		// } else if (xMin < scrollX) {
-		// 	window.scrollTo({
-		// 		left: xMin,
-		// 		top: scrollY
-		// 	})
-		// }
+		window.scrollTo({
+			left: centerX - innerWidth/2,
+			top: centerY - innerHeight/2
+		})
 	}
 }
 
-// Centered point of view on moving
+// Centered point of view on moving - done

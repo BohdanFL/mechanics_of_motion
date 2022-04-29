@@ -43,22 +43,7 @@ class Harvester extends Transport {
 	}
 
 	setVectors() {
-		this.vertex[0] = new Vector(
-			(this.x + (this.halfWidth - this.a)),
-			(this.y - this.b)
-		)
-		this.vertex[1] = new Vector(
-			(this.x + (this.halfWidth + this.a)),
-			(this.y + this.b)
-		)
-		this.vertex[2] = new Vector(
-			this.vertex[1].x - this.d,
-			this.vertex[1].y + this.c
-		)
-		this.vertex[3] = new Vector(
-			this.vertex[0].x - this.d,
-			this.vertex[0].y + this.c
-		)
+		setVectorsBindedBottom.call(this)
 	}
 
 	draw() {
