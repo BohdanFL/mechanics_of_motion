@@ -114,15 +114,13 @@ class Game {
 	}
 
 	start() {
-		this.image = new Image()
-		this.image.src = 'bg-2-min.jpg'
 		window.scrollTo({top: this.x, left: this.y})
 		// ctx.scale(this.zoom, this.zoom)
 		addEventListener("keydown", startMove)
 		addEventListener("keyup", stopMove)
 
 		// create transport
-		let transportWidth = 18
+		let transportWidth = 36
 		for (let i = 1; i <= 3; i++) {
 			this.addTransport(this.x + (transportWidth*2) * i, this.y + 350, transportWidth, transportWidth*1.6, 0, `hsl(${(360/5) * i}, 30%, 40%)`, 'tractor')
 		}
