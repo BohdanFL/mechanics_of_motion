@@ -111,7 +111,7 @@ function stopMove(e) {
 		keys[e.code] = false;
 	}
 }
-const toggleControls = document.getElementById('toggle-controls')
+
 function toggleShowButton(e) {
 	buttons.classList.toggle('hide')
 }
@@ -120,5 +120,3 @@ function initMoveBtn(btn, keyCode) {
 	btn.addEventListener("touchstart", (e) => (keys[keyCode] = true), {passive: true});
 	btn.addEventListener("touchend", (e) => (keys[keyCode] = false), {passive: true});
 }
-
-toggleControls.addEventListener('click', toggleShowButton)

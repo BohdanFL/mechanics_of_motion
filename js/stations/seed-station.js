@@ -6,9 +6,7 @@ class SeedStation extends Station {
 		this.sowings = []
 	}
 
-	draw() {
-		super.draw()
-
+	update() {
 		this.sowings.forEach(s => {
 			if (sat(s, this) && game.money > 0 && s.maxCapacity > s.capacity) {
 				s.capacity++

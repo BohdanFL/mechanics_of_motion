@@ -3,6 +3,7 @@ class Machine extends Box {
 		super(x, y, width, height, angle, color)
 
 		this.type = null
+		this.active = false
 		this.isConnected = false
 		this.transports = transports || []
 		this.connectedTransport = null
@@ -27,6 +28,31 @@ class Machine extends Box {
 				this.connectedTransport.connectedMachine = null
 				this.connectedTransport.isConnected = true
 				this.connectedTransport = null
+			}
+			if (e.code === 'KeyF' && this.isConnected && this.active !== null) {
+				this.active = this.active ? false: true
+			}
+			if (this.type === MACHINE_TYPE.sowing && this.isConnected) {
+				let index
+				if (e.code === 'KeyE') {
+					index = seedKeys.indexOf(this.seedType)
+					if (index < seedKeys.length-1) {
+						index++
+					} else {
+						index = 0
+					}
+				}
+				if (e.code === 'KeyQ') {
+					index = seedKeys.indexOf(this.seedType)
+					if (index > 0) {
+						index--
+					} else {
+						index = seedKeys.length-1
+					}
+				}
+				if (index >= 0) {
+					this.seedType = seedKeys[index]
+				}
 			}
 		})
 	}
@@ -140,11 +166,12 @@ class Header extends Machine {
 	}
 }
 
-class Tipper extends Machine{
+class Tipper extends Machine {
 	constructor(x, y, width, height, angle, transports) {
 		super(x, y, width, height, angle, transports, 'rgba(0, 255, 255, 1)')
 		this.type = 'tipper'
-		this.seedType = null
+		this.seedType = SEED_TYPE.canola
+		this.active = null
 		this.capacity = 8192/16
 		this.maxCapacity = 8192
 	}

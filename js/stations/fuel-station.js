@@ -6,9 +6,7 @@ class FuelStation extends Station {
 		this.transports = []
 	}
 
-	draw() {
-		super.draw()
-
+	update() {
 		this.transports.forEach(t => {
 			if (sat(t, this) && game.money > 0 && t.maxFuel >= t.fuel) {
 				t.fuel++

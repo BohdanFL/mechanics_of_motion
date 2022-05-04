@@ -11,10 +11,16 @@ class Game {
 		this.x = canvas.width/2 - innerWidth/2
 		this.y = canvas.height/2 - innerHeight/2
 		this.zoom = 1
+		this.storage = {}
+		for (const key in SEED_TYPE) {
+			this.storage[key] = 1000
+		}
 	}
 
 	addField(x, y, partsX, partsY, machines) {
-		this.fields.push(new Field(x, y, partsX, partsY, machines))
+		let field = new Field(x, y, partsX, partsY, machines)
+		this.fields.push(field)
+		return field
 	}
 
 	addTransport(x, y, width, height, angle, color, type) {
@@ -53,6 +59,7 @@ class Game {
 					break;
 			}
 		})
+		return transport
 	}
 
 	addMachine(x, y, width, height, type) {
@@ -83,6 +90,7 @@ class Game {
 				field.addMachine(machine)
 			}
 		})
+		return machine
 	}
 
 	addStation(x, y, width, height, angle, color, type) {
@@ -100,17 +108,27 @@ class Game {
 				station = new FertilizerStation(x, y, width, height, angle, color)
 				station.fertilizers = this.machines.filter(m => m.type === MACHINE_TYPE.fertilizer)
 				break;
+			case STATION_TYPE.loading:
+				station = new LoadingStation(x, y, width, height, angle, color)
+				station.tippers = this.machines.filter(m => m.type === MACHINE_TYPE.tipper)
+				break;
+			case STATION_TYPE.unloading:
+				station = new UnloadingStation(x, y, width, height, angle, color)
+				station.tippers = this.machines.filter(m => m.type === MACHINE_TYPE.tipper)
+				break;
 			default:
 				throw new Error('Not exist type')
 				break;
 		}
 		this.stations.push(station)
+		return station
 	}
 
 	addSellers(x, y, width, height, angle, color) {
 		let seller = new Seller(x, y, width, height, angle, color)
 		seller.tippers = this.machines.filter(m => m.type === MACHINE_TYPE.tipper)
 		this.sellers.push(seller)
+		return seller
 	}
 
 	start() {
@@ -132,7 +150,7 @@ class Game {
 
 		//create car
 		let carWidth = transportWidth * 0.9
-		let car = new Car(this.x + 600 + (15/2), this.y +305, carWidth, carWidth*1.8, 0, `hsl(${(360/5) * 5}, 30%, 40%)`)
+		let car = new Car(this.x + 370, this.y +305, carWidth, carWidth*1.8, 0, `hsl(${(360/5) * 5}, 30%, 40%)`)
 		this.transports.push(car)
 
 		// enable switch between transports
@@ -153,10 +171,8 @@ class Game {
 				}
 			}
 		harvester.tippers = game.machines.filter(m => m.type ==='tipper')
+
 		// create field
-		// for	(let i = 0; i < 4; i++) {
-		// 	this.addField(this.x + 15 + (16*20)*i + (60*i), this.y + 30, 16, 32, this.machines)
-		// }
 		for (let i = 0; i < fieldsPosition.length; i++) {
 			const field = fieldsPosition[i];
 			this.addField(field.x, field.y, field.partsX, field.partsY, this.machines)
@@ -165,10 +181,20 @@ class Game {
 		// create stations 
 		let i3 = 0
 		let stationWidth = 60
-		for (const key in STATION_TYPE) {
+		for (const stationKey in STATION_TYPE) {
 			let y = game.fields[0].units.findLast(t => t).y + game.fields[0].units.findLast(t => t).height
-			this.addStation(this.x + innerWidth-stationWidth, this.y + y + (stationWidth*2)*i3, 
-			stationWidth, stationWidth, 0, 'rgb(100, 100, 100)', key)
+			if (stationKey === STATION_TYPE.unloading) {
+				let j = 1
+				for (const seedKey in SEED_TYPE) {
+					const station = this.addStation(this.x + innerWidth-(stationWidth*2)*j, this.y + y + (stationWidth*2)*i3, 
+					stationWidth, stationWidth, 0, 'rgb(100, 100, 100)', stationKey)
+					station.seedType = seedKey
+					j++
+				}
+			} else {
+				this.addStation(this.x + innerWidth-stationWidth, this.y + y + (stationWidth*2)*i3, 
+				stationWidth, stationWidth, 0, 'rgb(100, 100, 100)', stationKey)
+			}
 			i3++
 		}
 
@@ -202,10 +228,17 @@ class Game {
 	showInfo() {
 		this.activeMachine = this.activeTransport.connectedMachine
 		$info.innerHTML = `
-			<span>${Math.abs(this.activeTransport.speed.toFixed(1))} km/h</span> <br>
-			<span>Money: ${this.money}</span> <br>
-			<span>Fuel: ${this.activeTransport.fuel.toFixed()}</span>
+			<span>${Math.abs(this.activeTransport.speed.toFixed(1))} km/h</span>
 		`
+		const moneyPlaceholderValue = '0'.repeat(9-this.money.toString().length)
+		const fuelPlaceholderValue = '0'.repeat(3-this.activeTransport.fuel.toFixed().toString().length)
+		$moneyValue.innerHTML = `<span class="placeholder">${moneyPlaceholderValue}</span>${this.money}`
+		$fuelValue.innerHTML = `<span class="placeholder">${fuelPlaceholderValue}</span>${this.activeTransport.fuel.toFixed()}`
+
+		if (this.activeMachine && this.activeMachine.active !== null)  {
+			$info.innerHTML += `<br><span>Active: ${this.activeMachine.active}</span>`
+		}
+
 		let procents, current, seed
 		if (this.activeMachine && this.activeMachine.hasOwnProperty('capacity')) {
 			current = this.activeMachine
@@ -215,17 +248,20 @@ class Game {
 
 		if (current && current.capacity > 0) {
 			procents = (100 * current.capacity) / current.maxCapacity
+			let capacityPlaceholderValue = '0'.repeat(3-procents.toFixed().toString().length)
 			if (current.hasOwnProperty('seedType') && current.seedType) {
 				seed = capitalize(current.seedType)
 			} else {
 				seed = 'Capacity'
 			}
-			$info.innerHTML += `<br><span>${seed}: ${procents.toFixed()} %</span>`
+			$capacityValue.innerHTML = `${seed}: <span class="placeholder">${capacityPlaceholderValue}</span>${procents.toFixed()}%`
+		} else {
+			$capacityValue.innerHTML = ''
 		}
-		$info.style.top = scrollY + 20+'px'
+		$info.style.top = scrollY + 60+'px'
 		$info.style.left = scrollX + (innerWidth*0.8)+'px'
 
-		$settings.style.top = scrollY +15+'px'
+		$settings.style.top = scrollY +60+'px'
 		$settings.style.left = scrollX +10+'px'
 	}
 
@@ -238,6 +274,9 @@ class Game {
 			if (physics.maxSpeed !== undefined) {
 				t.maxSpeed = physics.maxSpeed
 				t.maxSpeedBack = t.maxSpeed * t.maxSpeedBackKoef
+			}
+			if (physics.maxSpeedReserve !== undefined) {
+				t.maxSpeedReserve = physics.maxSpeedReserve
 			}
 			if (physics.turnStep!== undefined) {
 				t.turnStep = physics.turnStep

@@ -30,11 +30,11 @@ class Harvester extends Transport {
 	constructor(x, y, width, height, angle, color, physics) {
 		super(x, y, width, height, angle, color, physics)
 		this.type = 'harvester'
-		this.seedType = null
-		this.maxSpeed = this.maxSpeed * 0.5
-		this.velocity = this.velocity * 0.5
-		this.turnStep = this.turnStep * 0.7
-		this.capacity = 0
+		this.seedType = SEED_TYPE.wheat
+		// this.maxSpeed = this.maxSpeed * 0.5
+		// this.velocity = this.velocity * 0.5
+		// this.turnStep = this.turnStep * 0.7
+		this.capacity = 1000
 		this.maxCapacity = 8192
 		this.fuel = this.fuel*2.2
 		this.maxFuel = this.fuel*2.2-1
@@ -65,13 +65,19 @@ class Harvester extends Transport {
 	checkActiveTippers() {
 		let currentTipper = this.tippers.find(t => sat(t, this.hiddenCollider))
 		if (currentTipper && this.capacity > 0) {
-			this.pipe.opening = true
 
 			if (this.pipe.opened) {
+				if (!currentTipper.seedType) {
+					currentTipper.seedType = this.seedType
+				}
 				this.capacity -= 4 
 				currentTipper.capacity += 4
-				currentTipper.seedType = this.seedType
 			}
+			if (currentTipper.seedType && currentTipper.seedType !== this.seedType) {
+				return false
+			}
+			this.pipe.opening = true
+
 		} else{
 			if (this.pipe.opening !== null) {
 				this.pipe.opening = false

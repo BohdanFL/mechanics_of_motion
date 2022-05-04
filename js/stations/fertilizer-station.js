@@ -6,9 +6,7 @@ class FertilizerStation extends Station {
 		this.fertilizers = []
 	}
 
-	draw() {
-		super.draw()
-
+	update() {
 		this.fertilizers.forEach(f => {
 			if (sat(f, this) && game.money > 0 && f.maxCapacity > f.capacity) {
 				f.capacity++

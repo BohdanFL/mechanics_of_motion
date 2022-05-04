@@ -16,7 +16,7 @@ class Box {
 		this.init()
 		this.dir = getDirection(this.vertex)
 		this.texture = new Image()
-		this.texture.src = 'tractor.png'
+		this.texture.src = 'images/tractor.png'
 	}
 
 	setVectors() {
@@ -80,6 +80,7 @@ class Transport extends Box {
 		super(x, y, width, height, angle, color)
 		this.velocity = physics.velocity ?? 0.1
 		this.maxSpeed = physics.maxSpeed ?? 6
+		this.maxSpeedReserve = this.maxSpeed
 		this.maxSpeedBackKoef = 0.3
 		this.maxSpeedBack = this.maxSpeed * (physics.maxSpeedBackKoef || this.maxSpeedBackKoef)
 		this.friction = physics.friction ?? 0.07
@@ -114,6 +115,13 @@ class Transport extends Box {
 			let brightness = parseInt(color[1].slice(0, -1))
 			let lightness = parseInt(color[2].slice(0, -1))
 			this.color = `hsl(${colorDeg}, ${brightness + 40}%, ${lightness + 10}%)`
+		}
+		if (this.connectedMachine && this.connectedMachine.active) {
+			this.maxSpeed = this.maxSpeedReserve/2
+			this.maxSpeedBack = this.maxSpeed * this.maxSpeedBackKoef
+		} else {
+			this.maxSpeed = this.maxSpeedReserve
+			this.maxSpeedBack = this.maxSpeed * this.maxSpeedBackKoef
 		}
 		this.x += this.speedTurnX
 		this.y -= this.speedTurnY
@@ -172,7 +180,6 @@ class Transport extends Box {
 				this.speed -= this.velocity * stopVelocity;
 			} else {
 				this.speed = -this.maxSpeedBack
-
 			}
 
 			if (this.speed > -this.maxSpeed / 4 && this.speed < 0) {

@@ -13,6 +13,8 @@ class Seller extends Station {
 			if (sat(t, this) && t.capacity > 0) {
 				t.capacity -= 2
 				game.money += this.price*2
+			} else if (t.capacity <= 0) {
+				t.seedType = null
 			}
 		})
 	}

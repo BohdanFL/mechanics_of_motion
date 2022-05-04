@@ -10,6 +10,8 @@ class FieldUnit {
 		this.fertilized = false
 		this.grown = false
 		this.growingProgress = 0
+		this.withered = false
+		this.witheredProgress = 0
 		this.harvested = false
 		this.seedType = null
 
@@ -28,8 +30,8 @@ class Field {
 		this.x = x;
 		this.y = y;
 		this.gap = 0
-		this.unitWidth = 20;
-		this.unitHeight = 20;
+		this.unitWidth = 30;
+		this.unitHeight = 30;
 		this.width = (this.partsX) * this.unitWidth + (this.gap * (this.partsX))
 		this.height = (this.partsY) * this.unitHeight + (this.gap * (this.partsY))
 		this.color = "hsl(25, 50%, 20%)"
@@ -56,7 +58,7 @@ class Field {
 	updateUnitsCollide() {
 		this.unitsCollide = this.units.filter(unit => {
 			this.machines.forEach(machine => {
-				if (sat(machine, unit) && machine.isConnected && !machine.connectedTransport.disableMove) {
+				if (sat(machine, unit) && machine.isConnected && !machine.connectedTransport.disableMove && machine.active) {
 					switch (machine.type) {
 						case 'sowing':
 							if (!unit.growingProgress && machine.capacity >= 0.2) {
@@ -67,11 +69,18 @@ class Field {
 							break;
 						case 'header':
 							if (unit.grown && (machine.connectedTransport.capacity < machine.connectedTransport.maxCapacity)) {
+								if (machine.connectedTransport.seedType && 
+									machine.connectedTransport.seedType !== unit.seedType) {
+									return false
+								}
 								unit.harvested = true
 								unit.grown = false
 								unit.growingProgress = 0
 								console.log(unit.seedType)
-								machine.connectedTransport.seedType = unit.seedType
+								if (!machine.connectedTransport.seedType) {
+									machine.connectedTransport.seedType = unit.seedType
+								}
+
 								if (unit.fertilized) {
 									machine.connectedTransport.capacity += 2
 									return
@@ -80,18 +89,20 @@ class Field {
 							}
 							break;
 						case 'cultivator':
-							if (unit.harvested || unit.grown || unit.growingProgress) {
+							if (unit.harvested || unit.grown || unit.growingProgress || unit.withered) {
 								unit.cultivated = true
 								unit.harvested = false
 								unit.grown = false
 								unit.growingProgress = 0
+								unit.withered = 0
+								unit.witheredProgress = 0
 								if (unit.fertilized) {
 									unit.fertilized = false
 								}
 							}
 							break;
 						case 'fertilizer':
-							if (!unit.fertilized && (!unit.harvested || !unit.grown) && unit.growingProgress && machine.capacity >= 0.2) {
+							if (!unit.fertilized && (!unit.harvested || !unit.grown || !unit.withered) && unit.growingProgress && machine.capacity >= 0.2) {
 								unit.fertilized = true
 								machine.capacity -= 0.2
 								if (unit.growingProgress >= 33 && unit.growingProgress <= 66) {
@@ -136,19 +147,29 @@ class Field {
 				if ((unit.growingProgress / 33 === 1) || (unit.growingProgress / 33 === 2)) {
 					unit.color = `hsl(95, ${unit.growingProgress}%, ${unit.fertilized ? 20 : 30}%)`
 				}
-				unit.growingProgress += 2**-2
+				unit.growingProgress += 2**-1
 			}
 			if (unit.growingProgress >= 100) {
 				unit.grown = true
 			}
 			if (unit.grown) {
 				unit.color = 'hsl(50, 70%, 30%)'
+				if (unit.witheredProgress >= 100) {
+					unit.withered = true
+				} else {
+					unit.witheredProgress += 2**-8
+				}
 			}
+
 			if (unit.harvested) {
 				if (unit.fertilized) {
 					unit.fertilized = false
 				}
 				unit.color = 'hsl(50, 30%, 50%)'
+			}
+
+			if (unit.withered) {
+				unit.color = 'hsl(50, 20%, 35%)'
 			}
 			// console.log(ctx.fillStyle, unit.color)
 			// if (ctx.fillStyle !== unit.color)

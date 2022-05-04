@@ -8,98 +8,13 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
 		integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="style.css">
 	<title>Mechanics of motion</title>
-	<style>
-		*,
-		*::after,
-		*::before {
-			user-select: none;
-		}
 
-		html {
-			font-size: 16px;
-		}
-
-		body {
-			overflow: hidden;
-			font-family: monospace;
-		}
-
-		canvas {
-			position: absolute;
-			background-color: #2d2d2d;
-			background-image: url('bg-5.jpg');
-			/* object-fit: cover; */
-		}
-
-		#info {
-			position: absolute;
-			top: 20px;
-			left: 80%;
-			color: white;
-			font-size: 1.2em;
-			white-space: nowrap;
-		}
-
-		.settings {
-			position: absolute;
-			color: white;
-			font-size: 1rem;
-			white-space: nowrap;
-		}
-
-		.settings__title,
-		.settings__range {
-			cursor: pointer;
-		}
-
-		.settings-advanced {
-			margin-left: 10px;
-		}
-
-		.hide {
-			display: none;
-			user-select: none;
-			pointer-events: none;
-			width: 1px;height: 1px;
-			top: 0; left: 0;
-			opacity: 0;
-		}
-
-		#buttons {
-			display: flex;
-			position: fixed;
-			top: 100%;
-			left: 50%;
-			transform: translate(-50%, -110%);
-		}
-		#buttons__wrapper {
-			display: flex;
-			flex-wrap: wrap;
-		}
-		#buttons__wrapper button {
-			flex: 100% 0;
-		}
-
-		#buttons button {
-			text-transform: uppercase;
-			background-color: #f0f0f0;
-			text-align: center;
-			border: 2px solid;
-			padding: 20px 30px;
-		}
-
-		button:active {
-			box-shadow: inset 0px 0px 10px 2px;
-		}
-
-	</style>
 </head>
 
 <body>
-	<canvas id="canvas">
-		Your browser doesn't support a canvas
-	</canvas>
+
 	<div id="info"></div>
 	<details class="settings">
 		<summary class="settings__title">Налаштування</summary>
@@ -147,6 +62,100 @@
 			</ul>
 		</details>
 	</details>
+	<nav class="topbar">
+		<div class="topbar__inner">
+			<button class="topbar__shop-btn" id="shop-open">
+				<i class="fas fa-shopping-basket"></i>
+			</button>
+			<div class="topbar__info">
+				<div class="topbar__info-money">
+					<i class="fas fa-dollar-sign"></i><span id="money-value"><span class="placeholder">000000</span>000</span>
+				</div>
+				<div class="topbar__info-capacity">
+					<!-- <i class="fas fa-boxes"></i> --><span id="capacity-value"><span class="placeholder">000</span>%</span>
+				</div>
+				<div class="topbar__info-fuel">
+					<i class="fas fa-gas-pump"></i><span id="fuel-value"><span class="placeholder">000</span></span>
+				</div>
+			</div>
+			<button class="topbar__map-btn" id="map-open">
+				<i class="fas fa-map-marked-alt"></i>
+			</button>
+			<button class="topbar__menu-btn" id="menu-open">
+				<i class="fas fa-bars"></i>
+			</button>
+		</div>
+	</nav>
+	<canvas id="canvas">
+		Your browser doesn't support a canvas
+	</canvas>
+	<div class="container hide">
+		<div class="menu hide">
+			<div class="menu__inner">
+				<ul class="menu__list">
+					<li class="menu__item">
+						<button class="menu__btn" id="menu-prices-btn">
+							<i class="fas fa-dollar-sign"></i>
+							<span>Prices</span>
+						</button>
+					</li>
+					<li class="menu__item">
+						<button class="menu__btn" id="menu-statistics-btn">
+							<i class="fas fa-chart-pie"></i>
+							<span>Statistics</span>
+						</button>
+					</li>
+					<li class="menu__item">
+						<button class="menu__btn" id="menu-settings-btn">
+							<i class="fas fa-cog"></i>
+							<span>Settings</span>
+						</button>
+					</li>
+					<li class="menu__item">
+						<button class="menu__btn" id="menu-manual">
+							<i class="fas fa-book"></i>
+							<span>Manual</span>
+						</button>
+					</li>
+					<li class="menu__item">
+						<button class="menu__btn" id="menu-close-btn">
+							<i class="fas fa-times"></i>
+							<span>Quit</span>
+						</button>
+					</li>
+				</ul>
+			</div>
+			<div class="prices hide"></div>
+			<div class="statistics hide"></div>
+			<div class="settings hide"></div>
+			<div class="manual hide"></div>
+		</div>
+		<div class="shop hide">
+			<div class="shop__container">
+				<div class="shop__group">
+					<button class="shop__group-prev"></button>
+					<h2 class="shop__group-title"></h2>
+					<button class="shop__group-next"></button>
+				</div>
+				<div class="shop__slider">
+					<div class="shop__slider-item"></div>
+					<button class="shop__slider-info"></button>
+				</div>
+				<div class="shop__info">
+					<div class="shop__info-money"></div>
+					<div class="shop__info-brand"></div>
+					<div class="shop__info-name"></div>
+					<div class="shop__info-stats"></div>
+				</div>
+				<button class="shop__buy-btn"></button>
+				<button class="shop__sell-btn"></button>
+				<button class="shop__coins"></button>
+			</div>
+		</div>
+		<div class="map hide"></div>
+		<button id="close-btn"><</button>
+	</div>
+
 	<div id="buttons" class="hide">
 		<button id="left">Left</button>
 		<div id="buttons__wrapper">
@@ -156,6 +165,8 @@
 		<button id="right">Right</button>
 	</div>
 
+	<script src="https://kit.fontawesome.com/496cb3b967.js" crossorigin="anonymous"></script>
+
 	<script src="js/vars.js"></script>
 	<script src="js/math.js"></script>
 	<script src="js/additional.js"></script>
@@ -164,6 +175,7 @@
 	<script src="js/stations/fuel-station.js"></script>
 	<script src="js/stations/fertilizer-station.js"></script>
 	<script src="js/stations/seed-station.js"></script>
+	<script src="js/storage.js"></script>
 	<script src="js/seller.js"></script>
 	<script src="js/minimap.js"></script>
 

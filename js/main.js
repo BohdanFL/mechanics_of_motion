@@ -18,7 +18,8 @@ requestAnimationFrame(update)
 
 rangeMaxSpeed.addEventListener('input', e => {
 	let physics = {
-		maxSpeed: parseFloat(rangeMaxSpeed.value)
+		maxSpeed: parseFloat(rangeMaxSpeed.value),
+		maxSpeedReserve: parseFloat(rangeMaxSpeed.value)
 	}
 	game.setPhysicsForTransport(physics)
 	document.getElementById(rangeMaxSpeed.id + '-value').textContent = rangeMaxSpeed.value
@@ -63,33 +64,28 @@ initMoveBtn(upBtn, 'KeyW');
 initMoveBtn(downBtn, "KeyS");
 initMoveBtn(leftBtn, "KeyA");
 initMoveBtn(rightBtn, "KeyD");
-
-// image.onload = () => {
-	// use the intrinsic size of image in CSS pixels for the canvas element
-	// canvas.width = this.naturalWidth;
-	// canvas.height = this.naturalHeight;
-	
-	// will draw the image as 300x227 ignoring the custom size of 60x45
-	// given in the constructor
-	// ctx.drawImage(this, 0, 0);
-	
-	// To use the custom size we'll have to specify the scale parameters
-	// using the element's width and height properties - lets draw one
-	// on top in the corner:
-	// console.log(image, game.x, game.y, image.naturalWidth, image.naturalHeight)
-// }
-
-// addEventListener("resize", () => {
-// 	canvas.height = innerHeight
-// 	canvas.width = innerWidth
-// 	game.fields[0].resize()
-// })
-
-
-
-// setTimeout(() => {
-// 	alert("The keys Z and C switch between transports")
-// }, 300);
+toggleControls.addEventListener('click', toggleShowButton)
+menuBtn.addEventListener('click', () => {
+	$container.classList.remove('hide')
+	$menu.classList.remove('hide')
+})
+menuCloseBtn.addEventListener('click', () => {
+	$container.classList.add('hide')
+	$menu.classList.add('hide')
+})
+shopBtn.addEventListener('click', () => {
+	$container.classList.remove('hide')
+	$shop.classList.remove('hide')
+})
+mapBtn.addEventListener('click', () => {
+	$container.classList.remove('hide')
+	$map.classList.remove('hide')
+})
+closeBtn.addEventListener('click', () => {
+	$container.classList.add('hide')
+	$menu.classList.add('hide')
+	$shop.classList.add('hide')
+})
 
 /** Main
  *  Cars - done
@@ -101,42 +97,37 @@ initMoveBtn(rightBtn, "KeyD");
  *  Seller - done
  *  Chargers - done
  *  Map - done
- * 	Different seeds (changing seeds)
- *  Toggle activation machines
+ * 	Different seeds (changing seeds) - done
+ *  Toggle activation machines - done
+ *  Withered field - done
+ *  Control buttons for mobile - done
  *  Global collision
- *  Withered field
- *  Shops
+ *  Shop
+ *  Storage(loading, unloading)
  *  Changing price seeds system
  *  Zoom
- *  Full map
- *  Field status on map, mark transports, machines and tippers
+ *  Full the map with content
+ *  Topbar - done
  *  Page for map
- *  Collide between machines and transports
+ *  Field status on map, mark transports, machines and tippers
  *  Tractors, tippers, machines with other characteristics
- *  Calculate power of tractors, mass of tractos and attached machines
+ *  Calculate power of tractors, mass of tractos and attached machines - 50%
 // // *  Controls panel(same as fs)
  *  Microcontrol steering wheel turn
  *  Create collide manager
- *  Control buttons for mobile
+ *  Dependence consumption fuel from speed or other factors
+ *  Menu
  */
-
-/** 
- *  Change binded side for harvester - done
- *  Try optimize using SVG
- */
-
-/** Bugs 
- *  Коли fuel закінчився поворот при up або down не відбувається
- *  When fuel ended
- */
-
 
 /** Additional
  *  Draw transport
  *  Settings physics for transports - done
- *  Texture for map, tractors, field and etc.
- *  Added icons
- *  Collide with some square
+ *  Texture for map, tractors, field and etc. - started
+ *  Added icons - 50%
+ *  Detect collide with some square
+ *  Change binded side for harvester - done
+ *  Try optimize using SVG (field)
+ *  Коли fuel закінчився поворот при up або down не відбувається
  */
 
 // // * 	Add fuel - done

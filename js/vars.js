@@ -10,14 +10,36 @@ const rangeTurnStep = document.getElementById("turn-step")
 const rangeFriction = document.getElementById("friction")
 const rangeBraking = document.getElementById("braking")
 const rangeMaxSpeedBackKoef = document.getElementById("max-speed-back-koef")
-const $settings = document.querySelector(".settings")
 
+const $settings = document.querySelector(".settings")
+const $topbar = document.querySelector(".topbar")
+const $container = document.querySelector(".container")
+const $menu = document.querySelector(".menu")
+const $shop = document.querySelector(".shop")
+const $map = document.querySelector(".map")
+
+const toggleControls = document.getElementById('toggle-controls')
 
 const buttons = document.getElementById('buttons')
 const upBtn = document.getElementById("up");
 const downBtn = document.getElementById("down");
 const leftBtn = document.getElementById("left");
 const rightBtn = document.getElementById("right");
+
+const $fuelValue = document.getElementById("fuel-value");
+const $capacityValue = document.getElementById("capacity-value");
+const $moneyValue = document.getElementById("money-value");
+
+const mapBtn = document.getElementById('map-open')
+const shopBtn = document.getElementById('shop-open')
+const menuBtn = document.getElementById('menu-open')
+
+const menuPricesBtn = document.getElementById('menu-prices-btn')
+const menuStatisticsBtn = document.getElementById('menu-statistics-btn')
+const menuSettingsBtn = document.getElementById('menu-settings-btn')
+const menuCloseBtn = document.getElementById('menu-close-btn')
+
+const closeBtn = document.getElementById('close-btn')
 
 
 const keys = {
@@ -54,19 +76,24 @@ const SEED_TYPE = {
 	sugarbeet: 'sugarbeet'
 }
 
+const seedKeys = Object.keys(SEED_TYPE)
+
+
 const STATION_TYPE = {
 	fuel: 'fuel',
 	seed: 'seed',
 	fertilizer: 'fertilizer',
+	loading: 'loading',
+	unloading: 'unloading',
 }
 
 const fieldsPosition = [
-	{x: 20*30, y: 20*6, partsX: 32, partsY: 12},
-	{x: 20*30, y: 20*6 + 100 + 20*16, partsX: 28, partsY: 20},
-	{x: 20*30, y: 20*6 + 100 + 20*16 + 60 + 20*20, partsX: 24, partsY: 24},
-	{x: 20*30, y: 20*6 + 100 + 20*16 + 60 + 20*20 + 40 + 20*24, partsX: 12, partsY: 24},
+	{x: 20*30, y: 30*6, partsX: 32, partsY: 12},
+	{x: 20*30, y: 30*6 + 100 + 30*16, partsX: 28, partsY: 20},
+	{x: 20*30, y: 30*6 + 100 + 30*16 + 60 + 30*20, partsX: 24, partsY: 24},
+	{x: 20*30, y: 30*6 + 100 + 30*16 + 60 + 30*20 + 40 + 30*24, partsX: 12, partsY: 24},
 ]
 // fieldsPosition.push({{x: fieldsPosition.x, y: 20*6 + 100 + 20*16, partsX: 32, partsY: 16}})
 // 16-24; 24-16; 
-canvas.height = 4000
+canvas.height = 8000
 canvas.width = 6000
