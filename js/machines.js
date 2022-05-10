@@ -30,7 +30,10 @@ class Machine extends Box {
 				this.connectedTransport = null
 			}
 			if (e.code === 'KeyF' && this.isConnected && this.active !== null) {
-				this.active = this.active ? false: true
+				this.active = !this.active
+				let t = this.connectedTransport
+				t.currentMaxSpeed = t.maxSpeed / (this.active+1)
+				t.maxSpeedBack = t.currentMaxSpeed * t.maxSpeedBackKoef
 			}
 			if (this.type === MACHINE_TYPE.sowing && this.isConnected) {
 				let index
@@ -59,11 +62,11 @@ class Machine extends Box {
 
 	setVectors() {
 		this.vertex[0] = new Vector(
-			(this.x + (this.halfWidth - this.a)),
+			(this.x + (this.width/2 - this.a)),
 			(this.y - this.b)
 		)
 		this.vertex[1] = new Vector(
-			(this.x + (this.halfWidth + this.a)),
+			(this.x + (this.width/2 + this.a)),
 			(this.y + this.b)
 		)
 		this.vertex[2] = new Vector(
@@ -138,11 +141,11 @@ class Header extends Machine {
 
 	setVectors() {
 		this.vertex[0] = new Vector(
-			(this.x + (this.halfWidth - this.a)) + this.movingX,
+			(this.x + (this.width/2 - this.a)) + this.movingX,
 			(this.y + (this.height - this.b)) - this.movingY
 		)
 		this.vertex[1] = new Vector(
-			(this.x + (this.halfWidth + this.a))  + this.movingX,
+			(this.x + (this.width/2 + this.a))  + this.movingX,
 			(this.y + (this.height + this.b)) - this.movingY
 		)
 		this.vertex[2] = new Vector(
@@ -156,9 +159,7 @@ class Header extends Machine {
 	}
 
 	setConnectedPos() {
-		// this.movingX = this.connectedTransport.height * this.sin
-		// this.movingY = this.connectedTransport.height * this.cos
-		this.x = this.connectedTransport.x + this.connectedTransport.halfWidth - this.halfWidth
+		this.x = this.connectedTransport.x + this.connectedTransport.halfWidth - this.width / 2
 		this.y = this.connectedTransport.y - this.height
 
 		this.x += this.speedTurnX

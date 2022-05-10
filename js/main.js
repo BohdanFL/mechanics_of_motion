@@ -125,6 +125,8 @@ fullSeedStats()
  *  Create collide manager
  *  Dependence consumption fuel from speed or other factors
  *  Menu
+ *  Buy fields
+ *  Automatic  alignment
  */
 
 /** Additional

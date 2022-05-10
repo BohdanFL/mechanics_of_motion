@@ -1,7 +1,6 @@
 class TransportPipe extends Box {
 	constructor(x, y, width, height, angle, color) {
 		super(x, y, width, height, angle, color)
-		this.halfWidth = this.width
 		this.opening = false
 		this.opened = false
 	}
@@ -38,7 +37,7 @@ class Harvester extends Transport {
 		this.maxCapacity = 8192
 		this.fuel = this.fuel*2.2
 		this.maxFuel = this.fuel*2.2-1
-		this.pipe = new TransportPipe(this.x + 5, this.y + 5, this.width/12, this.height*0.8, this.angle, 'red')
+		this.pipe = new TransportPipe(this.x + 5, this.y + 5, this.width/6, this.height*0.8, this.angle, 'red')
 		this.hiddenCollider = new TransportPipe(this.pipe.x-this.pipe.height, this.pipe.y, this.pipe.width, this.pipe.width)
 	}
 

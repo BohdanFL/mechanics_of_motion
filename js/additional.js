@@ -71,11 +71,11 @@ function setWindowVectors(window) {
 
 function setVectorsBindedBottom() {
 	this.vertex[0] = new Vector(
-		(this.x + (this.halfWidth - this.a)),
+		(this.x + (this.width / 2 - this.a)),
 		(this.y - this.b)
 	)
 	this.vertex[1] = new Vector(
-		(this.x + (this.halfWidth + this.a)),
+		(this.x + (this.width / 2 + this.a)),
 		(this.y + this.b)
 	)
 	this.vertex[2] = new Vector(

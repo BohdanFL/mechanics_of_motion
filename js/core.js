@@ -3,7 +3,6 @@ class Box {
 		this.x = x
 		this.y = y
 		this.width = width
-		this.halfWidth = this.width / 2
 		this.height = height
 
 		this.speed = 0
@@ -21,11 +20,11 @@ class Box {
 
 	setVectors() {
 		this.vertex[0] = new Vector(
-			(this.x + (this.halfWidth - this.a)),
+			(this.x + (this.width / 2 - this.a)),
 			(this.y + (this.height - this.b))
 		)
 		this.vertex[1] = new Vector(
-			(this.x + (this.halfWidth + this.a)),
+			(this.x + (this.width / 2 + this.a)),
 			(this.y + (this.height + this.b))
 		)
 		this.vertex[2] = new Vector(
@@ -46,8 +45,8 @@ class Box {
 		this.speedTurnX = this.speed * this.sin
 		this.speedTurnY = this.speed * this.cos
 
-		this.a = (this.halfWidth) * this.cos
-		this.b = (this.halfWidth) * this.sin
+		this.a = (this.width / 2) * this.cos
+		this.b = (this.width / 2) * this.sin
 		this.c = this.height * this.cos
 		this.d = this.height * this.sin
 
@@ -80,9 +79,9 @@ class Transport extends Box {
 		super(x, y, width, height, angle, color)
 		this.velocity = physics.velocity ?? 0.1
 		this.maxSpeed = physics.maxSpeed ?? 6
-		this.maxSpeedReserve = this.maxSpeed
+		this.currentMaxSpeed = this.maxSpeed
 		this.maxSpeedBackKoef = 0.3
-		this.maxSpeedBack = this.maxSpeed * (physics.maxSpeedBackKoef || this.maxSpeedBackKoef)
+		this.maxSpeedBack = this.currentMaxSpeed * (physics.maxSpeedBackKoef || this.maxSpeedBackKoef)
 		this.friction = physics.friction ?? 0.07
 		this.turnStep = physics.turnStep ?? 1.2
 		this.braking = physics.braking ?? 2
@@ -115,13 +114,6 @@ class Transport extends Box {
 			let brightness = parseInt(color[1].slice(0, -1))
 			let lightness = parseInt(color[2].slice(0, -1))
 			this.color = `hsl(${colorDeg}, ${brightness + 40}%, ${lightness + 10}%)`
-		}
-		if (this.connectedMachine && this.connectedMachine.active) {
-			this.maxSpeed = this.maxSpeedReserve/2
-			this.maxSpeedBack = this.maxSpeed * this.maxSpeedBackKoef
-		} else {
-			this.maxSpeed = this.maxSpeedReserve
-			this.maxSpeedBack = this.maxSpeed * this.maxSpeedBackKoef
 		}
 		this.x += this.speedTurnX
 		this.y -= this.speedTurnY
@@ -157,14 +149,14 @@ class Transport extends Box {
 	moveUp() {
 		if (keys.KeyW || keys.ArrowUp) {
 			this.fuel -= this.fuelConsumption
-			if (this.maxSpeed > this.speed && this.maxSpeed) {
+			if (this.currentMaxSpeed > this.speed && this.currentMaxSpeed) {
 				let stopVelocity = this.speed < 0 ? this.braking : 1;
 				this.speed += this.velocity * stopVelocity;
 			} else {
-				this.speed = this.maxSpeed
+				this.speed = this.currentMaxSpeed
 			}
 
-			if (this.speed < this.maxSpeed / 4 && this.speed > 0) {
+			if (this.speed < this.currentMaxSpeed / 4 && this.speed > 0) {
 				this.rotate(this.turnStep * this.speed);
 				return
 			}
@@ -175,14 +167,14 @@ class Transport extends Box {
 	moveDown() {
 		if (keys.KeyS || keys.ArrowDown) {
 			this.fuel -= this.fuelConsumption
-			if (-this.maxSpeedBack < this.speed && this.maxSpeed) {
+			if (-this.maxSpeedBack < this.speed && this.currentMaxSpeed) {
 				let stopVelocity = this.speed > 0 ? this.braking : 1;
 				this.speed -= this.velocity * stopVelocity;
 			} else {
 				this.speed = -this.maxSpeedBack
 			}
 
-			if (this.speed > -this.maxSpeed / 4 && this.speed < 0) {
+			if (this.speed > -this.currentMaxSpeed / 4 && this.speed < 0) {
 				this.rotate(this.turnStep * Math.abs(this.speed));
 				return
 			}
