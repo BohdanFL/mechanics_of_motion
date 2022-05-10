@@ -17,6 +17,9 @@ const $container = document.querySelector(".container")
 const $menu = document.querySelector(".menu")
 const $shop = document.querySelector(".shop")
 const $map = document.querySelector(".map")
+const $stats = document.querySelector(".stats")
+// const $prices = document.querySelector(".prices")
+
 
 const toggleControls = document.getElementById('toggle-controls')
 

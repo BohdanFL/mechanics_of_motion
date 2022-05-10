@@ -13,7 +13,7 @@ class Game {
 		this.zoom = 1
 		this.storage = {}
 		for (const key in SEED_TYPE) {
-			this.storage[key] = 1000
+			this.storage[key] = 10000
 		}
 	}
 
@@ -245,7 +245,7 @@ class Game {
 		} else if (this.activeTransport.hasOwnProperty('capacity')) {
 			current = this.activeTransport
 		}
-
+		let img = $capacityValue.previousSibling
 		if (current && current.capacity > 0) {
 			procents = (100 * current.capacity) / current.maxCapacity
 			let capacityPlaceholderValue = '0'.repeat(3-procents.toFixed().toString().length)
@@ -254,8 +254,12 @@ class Game {
 			} else {
 				seed = 'Capacity'
 			}
-			$capacityValue.innerHTML = `${seed}: <span class="placeholder">${capacityPlaceholderValue}</span>${procents.toFixed()}%`
+			img.src = `images/${seed}.png`
+			img.alt = seed
+			$capacityValue.innerHTML = `<span class="placeholder">${capacityPlaceholderValue}</span>${procents.toFixed()}%`
 		} else {
+			img.src = ''
+			img.alt = ''
 			$capacityValue.innerHTML = ''
 		}
 		$info.style.top = scrollY + 60+'px'

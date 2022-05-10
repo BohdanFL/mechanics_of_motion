@@ -85,7 +85,15 @@ closeBtn.addEventListener('click', () => {
 	$container.classList.add('hide')
 	$menu.classList.add('hide')
 	$shop.classList.add('hide')
+	$stats.classList.add('hide')
 })
+
+menuStatisticsBtn.addEventListener('click', () => {
+	$container.classList.remove('hide')
+	$stats.classList.remove('hide')
+	$menu.classList.add('hide')
+})
+fullSeedStats()
 
 /** Main
  *  Cars - done
@@ -136,3 +144,19 @@ closeBtn.addEventListener('click', () => {
 // // Переписати все на вектори - done
 // // Рефакторінг коду(переписати в клас) - done
 // // створити загальний клас фігури(box, square) - done
+
+
+
+
+
+
+
+
+
+
+
+/* 
+Not every representational system is complex enough or has the need to develop a symbol for itself.
+Even complex organisms such as insects can run on pure instincts, blindly crawling to the next bit of sustenance.
+Even still, there is some fuzzy threshold at which point the self-symbol becomes inevitable.
+*/

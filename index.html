@@ -72,7 +72,7 @@
 					<i class="fas fa-dollar-sign"></i><span id="money-value"><span class="placeholder">000000</span>000</span>
 				</div>
 				<div class="topbar__info-capacity">
-					<!-- <i class="fas fa-boxes"></i> --><span id="capacity-value"><span class="placeholder">000</span>%</span>
+					<img src="images/wheat.png" alt="wheat"><span id="capacity-value"><span class="placeholder">000</span>%</span>
 				</div>
 				<div class="topbar__info-fuel">
 					<i class="fas fa-gas-pump"></i><span id="fuel-value"><span class="placeholder">000</span></span>
@@ -125,10 +125,6 @@
 					</li>
 				</ul>
 			</div>
-			<div class="prices hide"></div>
-			<div class="statistics hide"></div>
-			<div class="settings hide"></div>
-			<div class="manual hide"></div>
 		</div>
 		<div class="shop hide">
 			<div class="shop__container">
@@ -153,7 +149,38 @@
 			</div>
 		</div>
 		<div class="map hide"></div>
-		<button id="close-btn"><</button>
+		<div class="stats hide">
+			<div class="stats__inner menu-inner">
+				<div class="stats__head">
+					<button class="stats__prev-btn">
+						<i class="fas fa-chevron-left"></i>
+					</button>
+					<h2 class="stats__title">Statistics</h2>
+					<button class="stats__next-btn">
+						<i class="fas fa-chevron-right"></i>
+					</button>
+				</div>
+				<div class="stats__body">
+					<div class="stats__seeds seeds">
+						<div class="seeds__head">
+							<span class="seeds__head-name">Silo</span>
+							<span class="seeds__head-storage">Storage</span>
+						</div>
+						<ul class="seeds__list">
+						</ul>
+					</div>
+				</div>
+				<div class="stats__nav">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+			</div>
+		</div>
+		<button id="close-btn">
+			<i class="fas fa-chevron-left"></i>
+		</button>
 	</div>
 
 	<div id="buttons" class="hide">

@@ -120,3 +120,33 @@ function initMoveBtn(btn, keyCode) {
 	btn.addEventListener("touchstart", (e) => (keys[keyCode] = true), {passive: true});
 	btn.addEventListener("touchend", (e) => (keys[keyCode] = false), {passive: true});
 }
+
+function updateSeedCapacity(type) {
+	let seedCapacity = game.storage[type].toString()
+	let koef = Math.floor(seedCapacity.length / 3)
+	for (let i = 1; i < koef+1; i++) {
+		seedCapacity = seedCapacity.split('')
+		let length = seedCapacity.length - 1
+		seedCapacity.splice(length-2*i, 0, "'")
+		seedCapacity = seedCapacity.join('')
+	}
+	document.getElementById(type + '-capacity').textContent = seedCapacity
+}
+
+function fullSeedStats() {
+	let list = document.querySelector('.seeds__list')
+	list.innerHTML = ''
+	for (const key in SEED_TYPE) {
+		const seed = SEED_TYPE[key];
+		list.innerHTML += `
+		<li class="seeds__item">
+			<span class="seeds__item-name">
+				<img src="images/${seed}.png" alt="${seed}">
+				${capitalize(seed)}
+			</span>
+			<span class="seeds__item-capacity" id="${seed}-capacity"></span>
+		</li>
+		`
+		updateSeedCapacity(seed)
+	}
+}
