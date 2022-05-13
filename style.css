@@ -35,7 +35,7 @@ body {
 canvas {
 	position: absolute;
 	background-color: #2d2d2d;
-	background-image: url('images/bg-5.jpg');
+	background-image: url('images/map.jpg');
 	/* object-fit: cover; */
 }
 
@@ -141,6 +141,8 @@ canvas {
 	color: #feb500;
 }
 .topbar__info img {
+	color: #fff;
+	line-height: 5vh;
 	height: 5vh;
 	margin-right: 10px;
 	filter: invert(1) contrast(1);

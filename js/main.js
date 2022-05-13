@@ -18,8 +18,7 @@ requestAnimationFrame(update)
 
 rangeMaxSpeed.addEventListener('input', e => {
 	let physics = {
-		maxSpeed: parseFloat(rangeMaxSpeed.value),
-		maxSpeedReserve: parseFloat(rangeMaxSpeed.value)
+		maxSpeed: parseFloat(rangeMaxSpeed.value)
 	}
 	game.setPhysicsForTransport(physics)
 	document.getElementById(rangeMaxSpeed.id + '-value').textContent = rangeMaxSpeed.value

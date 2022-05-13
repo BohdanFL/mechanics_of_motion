@@ -91,12 +91,11 @@ const STATION_TYPE = {
 }
 
 const fieldsPosition = [
-	{x: 20*30, y: 30*6, partsX: 32, partsY: 12},
-	{x: 20*30, y: 30*6 + 100 + 30*16, partsX: 28, partsY: 20},
-	{x: 20*30, y: 30*6 + 100 + 30*16 + 60 + 30*20, partsX: 24, partsY: 24},
-	{x: 20*30, y: 30*6 + 100 + 30*16 + 60 + 30*20 + 40 + 30*24, partsX: 12, partsY: 24},
+	{x: 3380, y: 30*6, partsX: 32, partsY: 12},
+	{x: 3380, y: 30*6 + 100 + 30*16, partsX: 28, partsY: 20},
+	{x: 3380, y: 30*6 + 100 + 30*16 + 60 + 30*20, partsX: 24, partsY: 24},
+	{x: 3380, y: 30*6 + 100 + 30*16 + 60 + 30*20 + 40 + 30*24, partsX: 12, partsY: 24},
 ]
-// fieldsPosition.push({{x: fieldsPosition.x, y: 20*6 + 100 + 20*16, partsX: 32, partsY: 16}})
-// 16-24; 24-16; 
+
 canvas.height = 8000
-canvas.width = 6000
+canvas.width = 8000

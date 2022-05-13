@@ -29,33 +29,16 @@ class Machine extends Box {
 				this.connectedTransport.isConnected = true
 				this.connectedTransport = null
 			}
-			if (e.code === 'KeyF' && this.isConnected && this.active !== null) {
+			if (e.code === 'KeyE' && this.isConnected && this.active !== null) {
 				this.active = !this.active
 				let t = this.connectedTransport
 				t.currentMaxSpeed = t.maxSpeed / (this.active+1)
 				t.maxSpeedBack = t.currentMaxSpeed * t.maxSpeedBackKoef
 			}
-			if (this.type === MACHINE_TYPE.sowing && this.isConnected) {
-				let index
-				if (e.code === 'KeyE') {
-					index = seedKeys.indexOf(this.seedType)
-					if (index < seedKeys.length-1) {
-						index++
-					} else {
-						index = 0
-					}
-				}
-				if (e.code === 'KeyQ') {
-					index = seedKeys.indexOf(this.seedType)
-					if (index > 0) {
-						index--
-					} else {
-						index = seedKeys.length-1
-					}
-				}
-				if (index >= 0) {
-					this.seedType = seedKeys[index]
-				}
+			if (e.code === 'KeyF' && this.type === MACHINE_TYPE.sowing && this.isConnected) {
+				let index = seedKeys.indexOf(this.seedType)
+				index = index < seedKeys.length-1 ? index + 1 : 0
+				this.seedType = seedKeys[index]
 			}
 		})
 	}

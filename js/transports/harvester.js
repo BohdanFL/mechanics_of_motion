@@ -63,8 +63,7 @@ class Harvester extends Transport {
 
 	checkActiveTippers() {
 		let currentTipper = this.tippers.find(t => sat(t, this.hiddenCollider))
-		if (currentTipper && this.capacity > 0) {
-
+		if (currentTipper && this.capacity > 3) {
 			if (this.pipe.opened) {
 				if (!currentTipper.seedType) {
 					currentTipper.seedType = this.seedType
@@ -81,9 +80,7 @@ class Harvester extends Transport {
 			if (this.pipe.opening !== null) {
 				this.pipe.opening = false
 			}
-			if (this.capacity < 4) {
-				this.seedType = null
-			}
+			this.seedType = null
 		}
 	}
 

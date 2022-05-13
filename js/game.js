@@ -251,10 +251,10 @@ class Game {
 			let capacityPlaceholderValue = '0'.repeat(3-procents.toFixed().toString().length)
 			if (current.hasOwnProperty('seedType') && current.seedType) {
 				seed = capitalize(current.seedType)
+				img.src = `images/${seed}.png`
 			} else {
 				seed = 'Capacity'
 			}
-			img.src = `images/${seed}.png`
 			img.alt = seed
 			$capacityValue.innerHTML = `<span class="placeholder">${capacityPlaceholderValue}</span>${procents.toFixed()}%`
 		} else {
