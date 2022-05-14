@@ -58,7 +58,8 @@ class Field {
 	updateUnitsCollide() {
 		this.unitsCollide = this.units.filter(unit => {
 			this.machines.forEach(machine => {
-				if (sat(machine, unit) && machine.isConnected && !machine.connectedTransport.disableMove && machine.active) {
+				if (((machine.type !== 'header' && sat(machine.collider, unit)) || sat(machine, unit)) && machine.isConnected && 
+					!machine.connectedTransport.disableMove && machine.active) {
 					switch (machine.type) {
 						case 'sowing':
 							if (!unit.growingProgress && machine.capacity >= 0.2) {

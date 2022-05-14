@@ -29,16 +29,18 @@ class Harvester extends Transport {
 	constructor(x, y, width, height, angle, color, physics) {
 		super(x, y, width, height, angle, color, physics)
 		this.type = 'harvester'
-		this.seedType = SEED_TYPE.wheat
 		// this.maxSpeed = this.maxSpeed * 0.5
 		// this.velocity = this.velocity * 0.5
 		// this.turnStep = this.turnStep * 0.7
 		this.capacity = 1000
+		this.seedType = SEED_TYPE.wheat
 		this.maxCapacity = 8192
 		this.fuel = this.fuel*2.2
-		this.maxFuel = this.fuel*2.2-1
+		this.maxFuel = this.fuel*2.2
+		this.texture.src = 'images/harvester.png'
 		this.pipe = new TransportPipe(this.x + 5, this.y + 5, this.width/6, this.height*0.8, this.angle, 'red')
 		this.hiddenCollider = new TransportPipe(this.pipe.x-this.pipe.height, this.pipe.y, this.pipe.width, this.pipe.width)
+		this.reverseBind = true
 	}
 
 	setVectors() {
@@ -50,6 +52,7 @@ class Harvester extends Transport {
 		super.draw()
 		this.pipe.x = this.vertex[0].x
 		this.pipe.y = this.vertex[0].y
+		// this.pipe.angle = this.angle
 
 		this.hiddenCollider.x = this.vertex[0].x - this.pipe.height*this.cos
 		this.hiddenCollider.y = this.vertex[0].y - this.pipe.height*this.sin
@@ -63,13 +66,13 @@ class Harvester extends Transport {
 
 	checkActiveTippers() {
 		let currentTipper = this.tippers.find(t => sat(t, this.hiddenCollider))
-		if (currentTipper && this.capacity > 3) {
+		if (currentTipper && this.capacity > 15) {
 			if (this.pipe.opened) {
 				if (!currentTipper.seedType) {
 					currentTipper.seedType = this.seedType
 				}
-				this.capacity -= 4 
-				currentTipper.capacity += 4
+				this.capacity -= 16 
+				currentTipper.capacity += 16
 			}
 			if (currentTipper.seedType && currentTipper.seedType !== this.seedType) {
 				return false
@@ -80,7 +83,9 @@ class Harvester extends Transport {
 			if (this.pipe.opening !== null) {
 				this.pipe.opening = false
 			}
-			this.seedType = null
+			if (this.capacity < 16) {
+				this.seedType = null
+			}
 		}
 	}
 

@@ -8,5 +8,6 @@ class Car extends Transport {
 		this.maxSpeedBack = this.maxSpeed * this.maxSpeedBackKoef
 		this.fuel = 60
 		this.maxFuel = 60-1
+		this.texture.src = 'images/car.png'
 	}
 }

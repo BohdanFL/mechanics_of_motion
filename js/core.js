@@ -15,7 +15,7 @@ class Box {
 		this.init()
 		this.dir = getDirection(this.vertex)
 		this.texture = new Image()
-		this.texture.src = 'images/tractor.png'
+		this.reverseBind = false
 	}
 
 	setVectors() {
@@ -56,10 +56,10 @@ class Box {
 	draw() {
 		this.init()
 		if (sat(this, window)) {
-			if (this.hasOwnProperty('type') && this.type === 'tractor') {
-				ctx.translate(this.x + this.width/2, this.y + this.height)
+			if (this.texture.src) {
+				ctx.translate(this.x + this.width/2, this.y + this.height * !this.reverseBind)
 				ctx.rotate(this.radian)
-				ctx.drawImage(this.texture, -this.width/2, -this.height, this.width, this.height)
+				ctx.drawImage(this.texture, -this.width/2, -this.height * !this.reverseBind, this.width, this.height)
 				ctx.setTransform(1,0,0,1,0,0);
 				return
 			}
@@ -136,10 +136,10 @@ class Transport extends Box {
 		// right
 		if (keys.KeyD || keys.ArrowRight) {
 			if (keys.KeyS || keys.ArrowDown) {
-				if (this.angle <= 0) this.angle = 360
+				if (this.angle < 0) this.angle = 360
 				this.angle -= turnStep
 			} else {
-				if (this.angle >= 360) this.angle = 0
+				if (this.angle > 360) this.angle = 0
 				this.angle += turnStep
 			}
 		}
@@ -187,6 +187,19 @@ class Transport extends Box {
 		this.dir = rotMat.multiplyVec(this.refDir);
 		this.moveDown()
 		this.moveUp()
+		// let angles = [0, 90, 180, 270, 360]
+		// let range = 10
+		// if ([keys.KeyA, keys.KeyD, keys.ArrowLeft, keys.ArrowRight].every(v => !v)) {
+		// 	angles.forEach(angle => {
+		// 		if (this.angle > angle - range && this.angle < angle +range && this.angle.toFixed() !== angle) {
+		// 			if (this.angle > angle - range && this.angle < angle) {
+		// 				this.angle = this.angle.toFixed() + 1
+		// 			} else if(this.angle < angle + range && this.angle > angle) {
+		// 				this.angle = this.angle.toFixed() - 1
+		// 			}
+		// 		}
+		// 	})
+		// }
 	}
 
 	smoothStop() {
@@ -241,5 +254,3 @@ class Transport extends Box {
 		})
 	}
 }
-
-// Centered point of view on moving - done

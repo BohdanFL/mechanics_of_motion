@@ -4,5 +4,6 @@ class Tractor extends Transport {
 		this.type = 'tractor'
 		this.fuel = 160
 		this.maxFuel = 160-1
+		this.texture.src = 'images/tractor.png'
 	}
 }

@@ -138,21 +138,22 @@ class Game {
 		addEventListener("keyup", stopMove)
 
 		// create transport
+		// відношення(ширина-висота) = 1 -- 1.5
 		let transportWidth = 36
-		for (let i = 1; i <= 3; i++) {
-			this.addTransport(this.x + (transportWidth*2) * i, this.y + 350, transportWidth, transportWidth*1.6, 0, `hsl(${(360/5) * i}, 30%, 40%)`, 'tractor')
+		for (let i = 0; i < 3; i++) {
+			this.addTransport(this.x + (transportWidth*1.2) * i + 4, this.y + 350, transportWidth, transportWidth*1.5, 0, `hsl(${(360/5) * i}, 30%, 40%)`, 'tractor')
 		}
-
-		// create harvester'
-		let harvesterWidth = transportWidth*2
-		let harvester = new Harvester(this.x + transportWidth*2 * 4 + 35,this.y + 500, harvesterWidth, harvesterWidth*1.6, 0, `hsl(${(360/5) * 4}, 30%, 40%)`)
+		// create harvester
+		// відношення(ширина-висота) = 1 -- 1.8
+		let harvesterWidth = transportWidth*1.7
+		let harvester = new Harvester(this.x + transportWidth*1.2 * 3 + 16,this.y + 500, harvesterWidth, harvesterWidth*1.8, 0, `hsl(${(360/5) * 4}, 30%, 40%)`)
 		this.transports.push(harvester)
 
 		//create car
+		// відношення(ширина-висота) = 1 - 2
 		let carWidth = transportWidth * 0.9
-		let car = new Car(this.x + 370, this.y +305, carWidth, carWidth*1.8, 0, `hsl(${(360/5) * 5}, 30%, 40%)`)
+		let car = new Car(this.x + 238 + 5, this.y +350, carWidth, carWidth*2, 0, `hsl(${(360/5) * 5}, 30%, 40%)`)
 		this.transports.push(car)
-
 		// enable switch between transports
 		const switcher = new Switcher(this.transports)
 		switcher.on()
@@ -161,14 +162,17 @@ class Game {
 		let machineWidth = transportWidth*1.2
 			let i2 = 0
 			for (const key in MACHINE_TYPE) {
-				i2++
 				if (key === 'header') {
-					this.addMachine(this.x + machineWidth * i2-25, this.y + 400 + 50, machineWidth*2, machineWidth*0.4, key)
+					// відношення(ширина-висота) = 3 / 1
+					this.addMachine(this.x + machineWidth * i2, this.y + 450, machineWidth*2, machineWidth*2/3, key)
 				} else if (key ==='tipper'){
-					this.addMachine(this.x + (machineWidth * (i2+1) + 120), this.y + 400, machineWidth* 0.6, machineWidth*1.2, key)
+					
+					// відношення(ширина-висота) = 1 / 2.54
+					this.addMachine(this.x + (machineWidth * i2 + machineWidth*1.5), this.y + 450, machineWidth * 0.9, machineWidth * 0.9 * 2.54, key)
 				} else {
-					this.addMachine(this.x + machineWidth * i2-25, this.y + 400 + 50, machineWidth, machineWidth*1.2, key)
+					this.addMachine(this.x + machineWidth * i2, this.y + 450, machineWidth, machineWidth*1.2, key)
 				}
+				i2++
 			}
 		harvester.tippers = game.machines.filter(m => m.type ==='tipper')
 
@@ -199,7 +203,7 @@ class Game {
 		}
 
 		//create sellers
-		this.addSellers(this.x, this.y+innerHeight-stationWidth*3, stationWidth, stationWidth)
+		this.addSellers(this.x, this.y + 450 + transportWidth*1.5, stationWidth, stationWidth)
 		// create minimap
 		this.minimap = new Minimap(10, innerHeight-10, 36, 'black', this)
 		window.vertex = []
@@ -212,13 +216,20 @@ class Game {
 		window.dir = getDirection(window.vertex)
 
 		this.activeTransport = this.transports.find(t => !t.disableMove)
-		// ctx.drawImage(this.image, 0, 0, canvas.width, canvas.height)
+
+		this.activeMachine = this.activeTransport.connectedMachine
+		
 		this.fields.forEach(f => f.draw())
-		this.machines.forEach(m => m.draw())
+		this.machines.forEach(m => {
+			if (!this.activeMachine || this.activeMachine.type !== m.type) {
+				m.draw()
+			}
+		})
 		this.transports.forEach(t => {if (t.disableMove) t.draw()})
 		this.stations.forEach(s => s.draw())
 		this.sellers.forEach(s => s.draw())
-		// ctx.setTransform(1, 0, 0, 1, 0, 0);
+		
+		this.activeMachine && this.activeMachine.draw()
 		this.activeTransport.draw()
 		this.minimap.draw()
 		this.showInfo()
@@ -226,7 +237,6 @@ class Game {
 	}
 
 	showInfo() {
-		this.activeMachine = this.activeTransport.connectedMachine
 		$info.innerHTML = `
 			<span>${Math.abs(this.activeTransport.speed.toFixed(1))} km/h</span>
 		`
@@ -245,21 +255,19 @@ class Game {
 		} else if (this.activeTransport.hasOwnProperty('capacity')) {
 			current = this.activeTransport
 		}
-		let img = $capacityValue.previousSibling
+		let sibling = $capacityValue.previousSibling
 		if (current && current.capacity > 0) {
 			procents = (100 * current.capacity) / current.maxCapacity
 			let capacityPlaceholderValue = '0'.repeat(3-procents.toFixed().toString().length)
 			if (current.hasOwnProperty('seedType') && current.seedType) {
 				seed = capitalize(current.seedType)
-				img.src = `images/${seed}.png`
+				sibling.innerHTML = `<img src="images/${seed}.png" alt="${seed}" >`
 			} else {
-				seed = 'Capacity'
+				sibling.innerHTML = `Capacity`
 			}
-			img.alt = seed
 			$capacityValue.innerHTML = `<span class="placeholder">${capacityPlaceholderValue}</span>${procents.toFixed()}%`
 		} else {
-			img.src = ''
-			img.alt = ''
+			sibling.innerHTML = ''
 			$capacityValue.innerHTML = ''
 		}
 		$info.style.top = scrollY + 60+'px'
@@ -276,6 +284,11 @@ class Game {
 				t.velocity = physics.velocity
 			}
 			if (physics.maxSpeed !== undefined) {
+				if (t.maxSpeed === t.currentMaxSpeed) {
+					t.currentMaxSpeed = physics.maxSpeed
+				} else {
+					t.currentMaxSpeed = physics.maxSpeed / 2
+				}
 				t.maxSpeed = physics.maxSpeed
 				t.maxSpeedBack = t.maxSpeed * t.maxSpeedBackKoef
 			}

@@ -1,5 +1,6 @@
 class Machine extends Box {
 	constructor(x, y, width, height, angle, transports, color) {
+		// super.collider.dir = getDirection(this.collider.vertex)
 		super(x, y, width, height, angle, color)
 
 		this.type = null
@@ -7,6 +8,7 @@ class Machine extends Box {
 		this.isConnected = false
 		this.transports = transports || []
 		this.connectedTransport = null
+		this.collider = new Box(this.vertex[3].x, this.vertex[3].y, this.width, 1, this.angle, this.color)
 		this.connectListener()
 	}
 
@@ -35,7 +37,7 @@ class Machine extends Box {
 				t.currentMaxSpeed = t.maxSpeed / (this.active+1)
 				t.maxSpeedBack = t.currentMaxSpeed * t.maxSpeedBackKoef
 			}
-			if (e.code === 'KeyF' && this.type === MACHINE_TYPE.sowing && this.isConnected) {
+			if (e.code === 'KeyF' && this.type === MACHINE_TYPE.sowing && this.isConnected && !this.connectedTransport.disableMove) {
 				let index = seedKeys.indexOf(this.seedType)
 				index = index < seedKeys.length-1 ? index + 1 : 0
 				this.seedType = seedKeys[index]
@@ -72,11 +74,19 @@ class Machine extends Box {
 			this.speed = 0
 		}
 		super.draw()
+		// if (!this.collider) return
+		// this.collider.x = this.vertex[3].x
+		// this.collider.y = this.vertex[3].y
+		// this.collider.speed = this.speed
+		// this.collider.angle = this.angle
+		// this.collider.dir = this.dir
+		// this.collider.init()
 	}
 
 	setConnectedPos() {
 		this.x = this.connectedTransport.x - (this.width - this.connectedTransport.width) / 2
 		this.y = this.connectedTransport.y + this.connectedTransport.height
+
 		this.x += this.speedTurnX
 		this.y -= this.speedTurnY
 	}
@@ -120,6 +130,8 @@ class Header extends Machine {
 		this.type = 'header'
 		this.movingX = 0
 		this.movingY = 0
+		this.collider = null
+		this.texture.src = 'images/header.png'
 	}
 
 	setVectors() {
@@ -142,11 +154,16 @@ class Header extends Machine {
 	}
 
 	setConnectedPos() {
-		this.x = this.connectedTransport.x + this.connectedTransport.halfWidth - this.width / 2
+		// console.clear()
+		// console.log(this.connectedTransport.x, this.width, this.connectedTransport.width)
+
+		this.x = this.connectedTransport.x + this.connectedTransport.width/2 - this.width / 2
 		this.y = this.connectedTransport.y - this.height
 
 		this.x += this.speedTurnX
 		this.y -= this.speedTurnY
+		// console.log(this.connectedTransport.x, this.width, this.connectedTransport.width)
+		
 	}
 }
 
@@ -158,5 +175,8 @@ class Tipper extends Machine {
 		this.active = null
 		this.capacity = 8192/16
 		this.maxCapacity = 8192
+		this.texture.src = 'images/tipper.png'
+		// this.collider = new Box(this.x, this.y + this.heig, this.width*0.7, this.height*0.7, this.angle, this.color)
+		this.reverseBind = true
 	}
 }
