@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
 		integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -127,36 +128,129 @@
 			</div>
 		</div>
 		<div class="shop hide">
-			<div class="shop__container">
-				<div class="shop__group">
-					<button class="shop__group-prev"></button>
-					<h2 class="shop__group-title"></h2>
-					<button class="shop__group-next"></button>
+			<div class="shop__inner">
+				<div class="shop__head slider-head">
+					<button class="slider-head__prev-btn">
+						<i class="fas fa-chevron-left"></i>
+					</button>
+					<div class="shop__head-slider">
+						<h2 class="slider-head__title">Tractors</h2>
+						<h2 class="slider-head__title">Harvesters</h2>
+						<h2 class="slider-head__title">Transports</h2>
+						<h2 class="slider-head__title">Tippers</h2>
+						<h2 class="slider-head__title">Sowing machines</h2>
+						<h2 class="slider-head__title">Cultivators</h2>
+						<h2 class="slider-head__title">Fertilizers</h2>
+					</div>
+					<button class="slider-head__next-btn">
+						<i class="fas fa-chevron-right"></i>
+					</button>
 				</div>
 				<div class="shop__slider">
-					<div class="shop__slider-item"></div>
-					<button class="shop__slider-info"></button>
+					<button class="shop__slider-info">
+						<i class="fas fa-info"></i>
+					</button>
+					<button class="shop__slider-prev">
+						<i class="fas fa-chevron-left"></i>
+					</button>
+					<button class="shop__slider-next">
+						<i class="fas fa-chevron-right"></i>
+					</button>
+					<div class="shop__slider-content">
+						<div class="shop__slider-item">Tractor</div>
+						<div class="shop__slider-item">Harvester</div>
+						<div class="shop__slider-item">Car</div>
+						<div class="shop__slider-item">Tipper</div>
+						<div class="shop__slider-item">Sowing machine</div>
+						<div class="shop__slider-item">Cultivator</div>
+						<div class="shop__slider-item">Fertilizer</div>
+					</div>
 				</div>
 				<div class="shop__info">
-					<div class="shop__info-money"></div>
-					<div class="shop__info-brand"></div>
-					<div class="shop__info-name"></div>
-					<div class="shop__info-stats"></div>
+					<div class="shop__info-money">
+						<div class="shop__info-icon">
+							<i class="fas fa-dollar-sign"></i>
+						</div>
+						<span></span>
+					</div>
+					<div class="shop__info-brand">
+						<img src="" alt="">
+					</div>
+					<h3 class="shop__info-name">Axial-Flow 1660</h3>
+					<div class="shop__info-stats additional">
+						<div class="additional__row">
+							<div class="additional__row-item">
+								<div class="additional__row-icon">
+									<i></i>
+								</div>
+								<span class="additional__row-value">
+									190
+								</span>
+							</div>
+							<div class="additional__row-item">
+								<div class="additional__row-icon">
+									<i></i>
+								</div>
+								<span class="additional__row-value">
+									20
+								</span>
+							</div>
+						</div>
+						<div class="additional__row">
+							<div class="additional__row-item">
+								<div class="additional__row-icon">
+									<i></i>
+								</div>
+								<span class="additional__row-value">
+									6'300
+								</span>
+							</div>
+							<div class="additional__row-item">
+								<div class="additional__row-icon">
+									<i></i>
+								</div>
+								<span class="additional__row-value">
+									0
+								</span>
+							</div>
+						</div>
+						<div class="additional__row">
+							<div class="additional__row-icon"><img src="images/wheat.png" alt="wheat"></div>
+							<div class="additional__row-icon"><img src="images/corn.png" alt="corn"></div>
+							<div class="additional__row-icon"><img src="images/canola.png" alt="canola"></div>
+							<div class="additional__row-icon"><img src="images/sunflower.png" alt="sunflower"></div>
+						</div>
+					</div>
 				</div>
-				<button class="shop__buy-btn"></button>
-				<button class="shop__sell-btn"></button>
-				<button class="shop__coins"></button>
+				<button class="shop__btn shop__btn-buy">
+					<i class="fas fa-shopping-basket"></i>
+					<div class="shop__btn-price">
+						<span>145'000</span>
+					</div>
+				</button>
+				<button class="shop__btn shop__btn-sell">
+					<i class="fas fa-shopping-basket"></i>
+					<div class="shop__btn-price">
+						<span>108'750</span>
+					</div>
+				</button>
+				<button class="shop__btn shop__btn-coins">
+					<div class="shop__btn-icon">
+						<i class="fas fa-dollar-sign"></i>
+					</div>
+					<span>coins</span>
+				</button>
 			</div>
 		</div>
 		<div class="map hide"></div>
 		<div class="stats hide">
-			<div class="stats__inner menu-inner">
-				<div class="stats__head">
-					<button class="stats__prev-btn">
+			<div class="stats__inner">
+				<div class="stats__head slider-head">
+					<button class="slider-head__prev-btn">
 						<i class="fas fa-chevron-left"></i>
 					</button>
-					<h2 class="stats__title">Statistics</h2>
-					<button class="stats__next-btn">
+					<h2 class="slider-head__title">Statistics</h2>
+					<button class="slider-head__next-btn">
 						<i class="fas fa-chevron-right"></i>
 					</button>
 				</div>
@@ -186,15 +280,18 @@
 	<div id="buttons" class="hide">
 		<button id="left">Left</button>
 		<div id="buttons__wrapper">
-		  <button id="up">Up</button>
-		  <button id="down">Down</button>
+		<button id="up">Up</button>
+		<button id="down">Down</button>
 		</div>
 		<button id="right">Right</button>
 	</div>
 
 	<script src="https://kit.fontawesome.com/496cb3b967.js" crossorigin="anonymous"></script>
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 	<script src="js/vars.js"></script>
+	<script src="js/slider.js"></script>
+	<script src="js/store.js"></script>
 	<script src="js/math.js"></script>
 	<script src="js/additional.js"></script>
 	<script src="js/core.js"></script>

@@ -121,16 +121,25 @@ function initMoveBtn(btn, keyCode) {
 	btn.addEventListener("touchend", (e) => (keys[keyCode] = false), {passive: true});
 }
 
-function updateSeedCapacity(type) {
-	let seedCapacity = game.storage[type].toString()
-	let koef = Math.floor(seedCapacity.length / 3)
-	for (let i = 1; i < koef+1; i++) {
-		seedCapacity = seedCapacity.split('')
-		let length = seedCapacity.length - 1
-		seedCapacity.splice(length-2*i, 0, "'")
-		seedCapacity = seedCapacity.join('')
+function formatNumber(str) {
+	if (typeof str === "number") {
+		str = str.toString();
+	} else if (typeof str !== 'string') {
+		throw new Error(`Not suitable type: ${str}`);
 	}
-	document.getElementById(type + '-capacity').textContent = seedCapacity
+	if (str.length > 3) {
+		str = str.split("");
+		str.reverse();
+		let [length, pos] = [str.length, 3];
+		for (let i = 1; i < length / 3; i++) {
+		str.splice(pos, 0, "'");
+		pos += 4;
+	}
+		str.reverse();
+		return str.join("");
+	} else {
+		return str;
+	}
 }
 
 function fullSeedStats() {
@@ -147,6 +156,6 @@ function fullSeedStats() {
 			<span class="seeds__item-capacity" id="${seed}-capacity"></span>
 		</li>
 		`
-		updateSeedCapacity(seed)
+		document.getElementById(seed + '-capacity').textContent = formatNumber(game.storage[seed])
 	}
 }

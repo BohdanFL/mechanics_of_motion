@@ -9,7 +9,8 @@ class LoadingStation extends Station {
 		this.tippers.forEach(t => {
 			if (sat(t, this) && t.capacity > 15) {
 				game.storage[t.seedType] += 16
-				updateSeedCapacity(t.seedType)
+				document.getElementById(t.seedType + '-capacity').textContent = formatNumber(game.storage[t.seedType])
+
 				t.capacity -= 16
 			}
 			if (t.capacity < 16) {
@@ -30,7 +31,7 @@ class UnloadingStation extends Station {
 		this.tippers.forEach(t => {
 			if (sat(t, this) && game.storage[this.seedType] > 15 && (!t.seedType || t.seedType === this.seedType)) {
 				game.storage[this.seedType] -= 16
-				updateSeedCapacity(this.seedType)
+				document.getElementById(t.seedType + '-capacity').textContent = formatNumber(game.storage[t.seedType])
 				t.capacity += 16
 				t.seedType = this.seedType
 			}

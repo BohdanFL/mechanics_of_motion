@@ -243,6 +243,7 @@ class Game {
 		const moneyPlaceholderValue = '0'.repeat(9-this.money.toString().length)
 		const fuelPlaceholderValue = '0'.repeat(3-this.activeTransport.fuel.toFixed().toString().length)
 		$moneyValue.innerHTML = `<span class="placeholder">${moneyPlaceholderValue}</span>${this.money}`
+		shopMoney.textContent = formatNumber(this.money)
 		$fuelValue.innerHTML = `<span class="placeholder">${fuelPlaceholderValue}</span>${this.activeTransport.fuel.toFixed()}`
 
 		if (this.activeMachine && this.activeMachine.active !== null)  {

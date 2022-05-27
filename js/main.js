@@ -94,6 +94,8 @@ menuStatisticsBtn.addEventListener('click', () => {
 })
 fullSeedStats()
 
+
+
 /** Main
  *  Cars - done
  * 	Tractors - done
